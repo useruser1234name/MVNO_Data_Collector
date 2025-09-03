@@ -1,0 +1,75 @@
+{
+  "products": [
+    {
+      "name": "web_widget",
+      "id": "uplussavehelp.zendesk.com",
+      "bootstrap": {
+        "config": {
+          "features": {
+            "multiConvoEnabled": true,
+            "fastLoad": true,
+            "messagingPrivacyNoticeEvents": true,
+            "conversationTicketMetadata": true,
+            "displayAcWaitTimeCapsule": true
+          },
+          "messenger": {
+            "canUserCreateMoreConversations": true,
+            "color": {
+              "message": "#303032",
+              "action": "#3b3b3b",
+              "primary": "#733a9d"
+            },
+            "integrationId": "6196ea1b15623100ea580d3d",
+            "description": "[궁금하신 사항을 실시간 답변 드립니다.]",
+            "attachmentsEnabled": false,
+            "privacyNoticeEnabled": false,
+            "avatar": null,
+            "positionOffset": {
+              "mobile": {
+                "horizontal": "16",
+                "vertical": "16"
+              },
+              "web": {
+                "horizontal": "16",
+                "vertical": "16"
+              }
+            },
+            "title": "U+유모바일 상담 챗봇입니다.",
+            "showZendeskLogo": false,
+            "canUserSeeConversationList": true,
+            "baseUrl": "https://uplussavehelp.zendesk.com/sc/sdk",
+            "waitConfig": {
+              "queuePollingInterval": 60.0,
+              "queuePositionEnabled": false,
+              "onlyDecreasingQueue": false,
+              "waitTimeEnabled": false
+            },
+            "conversationHistory": "remember",
+            "channelLinkingEnabled": false,
+            "frameBorderRadius": "20",
+            "appId": "6196e9ff31063a00e94b3931",
+            "soundNotificationEnabled": false,
+            "privacyNoticeUrl": null,
+            "position": "right",
+            "proactiveMessagingEnabled": false,
+            "launcher": {
+              "shapeSettings": null,
+              "showTextInMobile": false,
+              "text": "",
+              "shape": "circle"
+            }
+          }
+        }
+      },
+      "features": [],
+      "url": "https://ekr.zendesk.com/compose_product/web_widget/d91e1863d25fa93302e8d09c1b355cf5cda222b5?features%5B%5D=",
+      "assets": {
+        "scripts": [
+          {
+            "src": "https://static.zdassets.com/web_widget/messenger/latest/web-widget-main-d91e186.js"
+          }
+        ]
+      }
+    }
+  ]
+}

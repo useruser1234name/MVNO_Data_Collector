@@ -1,0 +1,15 @@
+{
+  "url": "/product/pric/cmm/retrieveCusPricResultAjax",
+  "method": "POST",
+  "headers": {
+    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+  },
+  "body": {
+    "useYn": "Y",
+    "ctgrId": "003",
+    "dataUseLvl": "H",
+    "ppnGen": "4",
+    "callUseLvl": "H",
+    "_csrf": "8c38d2a7-d89e-44c5-87d6-5d38d3d45793"
+  }
+}
