@@ -1,0 +1,1072 @@
+필요한 컬럼이
+
+
+
+title: <h2 class="title">취향저격 카페타임 (15GB+/100분)</h2>
+Voice: <div class="data-wp"> </li><li><span class="sr-only">음성 제공량</span><i class="icon-call"></i><p>100분</p>
+SMS: <div class="data-wp"> </li><li><span class="sr-only">문자 제공량</span><i class="icon-sms"></i><p>100건</p></li></ul>
+Data: <div class="data-wp"> <li><span class="sr-only">데이터 제공량</span><i class="icon-data"></i><p>15GB</p>
+QOS: <div class="item2"> <p>소진 시<br>최대 3Mbps<br>무제한!</p>
+Cost: <div class="price-lst"><div class="item1"> <em>기본료</em> <p><b>49,500</b>원
+Discount: </div><div class="item2"> <em>프로모션 할인 후 기본료</em> <p><b>28,600</b>원</p> </div></div>
+Event: <div class="heading-depth2 mb-1"> 
+RS_or_RM: voice == {"기본제공": RS, 그외 RM}
+
+
+
+전략부터 구성하죠 코드 수정 x
+<div class="container">
+				<div class="heading-depth1 text-left mb-3">
+					<div class="badge-wp"><span class="badge1">LTE</span><span class="badge2">프로모션 할인</span></div>
+					<form id="frm" name="frm">
+						<input type="hidden" id="refCode" name="refCode" value="USIM">
+						<input type="hidden" id="searchCallPlanType" name="searchCallPlanType" value="PROD_USIM_TYPE_ALL">
+						<input type="hidden" id="searchOrderby" name="searchOrderby" value="4"></form>
+					<h2 class="title">취향저격 카페타임 (15GB+/100분)</h2>
+					<p class="sub text-default font-weight-normal mt-1"><span>데이터 무제한에 매월 투썸플레이스 5,000원 상품권까지</span></p>
+				</div>
+				<div class="plan-info">
+					<div class="data-wp">
+						<ul><li><span class="sr-only">데이터 제공량</span><i class="icon-data"></i><p>15GB</p>
+							</li><li><span class="sr-only">음성 제공량</span><i class="icon-call"></i><p>100분</p>
+							</li><li><span class="sr-only">문자 제공량</span><i class="icon-sms"></i><p>100건</p></li></ul>
+					</div>
+					<div class="price-wp">
+						<div class="price-lst"><div class="item1"> <em>기본료</em> <p><b>49,500</b>원</p> </div><div class="item2"> <em>프로모션 할인 후 기본료</em> <p><b>28,600</b>원</p> </div></div><button type="button" class="btn btn-primary" onclick="location.href='/shop/mobile/usimList.do?salePlcyCd=1000042429';">지금 가입하기</button></div>
+				</div><div class="heading-depth2">
+<h3 class="title text-primary">※모두의결합 +10GB 대상요금제 </h3>
+</div>
+
+
+<div class="heading-depth2">
+<div class="plan-detail">
+           <div class="plan-sect">
+                     <p class="tit-sub"> 추천받고 가입하면 친구도 나도 매월 데이터를 더 받는 요금제</p>
+                    <ul class="lst-dot">
+                     <li>프로모션 기간 내 추천받고 가입하면, 모두의결합 대상요금제를 이용하는 추천인/피추천인에게 추가 데이터가 제공됩니다.   </li>
+                     <li>모두의결합 데이터는 익월 초부터 적용되며, 대상 요금제 유지 시 최대 24개월간 제공됩니다.  </li>
+                      <li>모두의결합 데이터는 m-VoIP 및 테더링으로 이용 가능가능합니다. (데이터 소진 순서 : 모두의결합 &gt; (구)데이터플러스 &gt; 기본제공데이터 &gt; QoS)</li>
+                    </ul>
+           </div>
+</div>
+ 
+
+<!-- 2023.07.31 데이터 플러스 종료
+<div class="heading-depth2">
+ <h3 class="title text-primary">※데이터플러스 프로모션 안내</h3>
+</div>
+
+
+<div class="heading-depth2">
+<div class="plan-detail">
+           <div class="plan-sect">
+                     <p class="tit-sub"> - 5/1 ~ 7/31 기간 내 신규(요금제 변경) 가입자에게 24개월간 추가 데이터 50GB 지급 </p>
+                    <ul class="lst-dot">
+                     <li>추가 데이터는 당일 자정부터 적용되며, 대상 요금제에서 타 요금제로 변경/해지 시 혜택 제공이 중단됩니다. </li>
+                      <li>데이터는 데이터 플러스 → 기본제공 데이터 → QoS 순으로 소진되나, 테더링 이용 시에는 기본제공 데이터에서 차감됩니다. </li>
+                    </ul>
+           </div>
+</div>
+-->
+<!-- 카페타임 혜택안내 -->
+<div class="heading-depth2 mb-1">
+  <h3 class="title text-lightning" style="color: #B1051E !important;">쿠폰팩 혜택 안내</h3>
+</div>
+
+<div class="plan-detail">
+  <div class="plan-sect">
+    <div class="row">
+      <div class="col-lg-7">
+        <p class="tit-sub">매월 절약하는 통신비에, 원하는 커피 한 잔까지?<br>
+        요금제 유지 기간 중 매월 투썸플레이스 5,000원 상품권이 무료</p>
+        <ul class="lst-dot">
+        <li>매월 초 MMS로 상품권 발송 (가입 후 M+2월부터 지급)</li> 
+        <li>투썸플레이스 매장에서 사용 (*바코드 제시)</li>
+       <li>가입 후 최대 24개월 동안 상품권 제공</li>
+      </ul></div>
+
+      <div class="col-lg-5 text-lg-right">
+        <div class="data-plus">
+          <div class="lightning" style="background: #B1051E!important; border: .83rem solid #7D8082;">
+            <p>투썸플레이스<br>5,000원</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- //카페타임-->
+
+
+<div class="heading-depth2">
+ <h3 class="title text-primary">기본 제공량 이용안내</h3>
+</div>
+<div class="plan-detail">
+ <!-- 데이터 -->
+ <div class="plan-sect">
+  <div class="row">
+   <div class="col-lg-6">
+    <strong class="tit">데이터</strong>
+    <p class="tit-sub">15GB 기본제공 후 소진 시, 최대 3Mbps 속도로 무제한 이용 가능</p>
+    <ul class="lst-dot">
+     <li>3Mbps : 스트리밍 음악 및 실시간 동영상(720p 해상도) 을 끊김 없이 볼 수 있는 속도</li>
+    </ul>
+   </div>
+   <div class="col-lg-6 text-lg-right">
+    <div class="data-plus">
+     <div class="item1">
+      <p><i class="icon-data1"></i><br>15GB<br>기본제공</p>
+     </div>
+     <span class="plus"></span>
+     <div class="item2">
+      <p>소진 시<br>최대 3Mbps<br>무제한!</p>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+ <!-- //데이터 -->
+ <!-- 통화 -->
+ <div class="plan-sect">
+  <strong class="tit">통화</strong>
+  <p class="tit-sub">HD Voice 음성통화를 포함하여 집전화 이동전화 100분 기본 제공, 소진 시 기준요율에 따라 과금</p>
+  <ul class="lst-dot">
+   <li>부가통화 1초 이용 시 음성통화 제공량에서 1초 차감</li>
+   <li>영상통화 1초 이용 시 음성통화 제공량에서 1.66초 차감</li>
+  </ul>
+  <p class="text-info text-grey">
+   ※부가통화란?<br>전국 대표번호(15XX, 16XX, 18XX 등), 개인번호서비스(050, 060 등), 0130, 011-200, 011-700, 지역번호+153/141/700 등의 전화번호로 하는 통화
+  </p>
+ </div>
+ <!-- //통화 -->
+ <!-- 문자 -->
+ <div class="plan-sect">
+  <strong class="tit">문자</strong>
+  <p class="tit-sub">SK텔레콤, KT, 유플러스 등 사업자 관계 없이 이용가능한 문자 100건 (SMS 기준이며, 2200원 상당) 기본 제공, 소진 시 기준요율에 따라 과금</p>
+  <ul class="lst-dot">
+   <li>음성통화 및 문자 기본 혜택을 악용하는 이용자를 방지 하기 위해 Fair Use Policy 정책이 적용될 수 있습니다. <a href="#" class="text-link ml-2" data-toggle="modal" data-target=".modal-planGuide">자세히보기</a></li>
+  </ul>
+ </div>
+<!-- //공통안내 -->
+ <div class="plan-sect">
+    <p class="tit-sub">데이터 및 음성통화 기본 제공량은 국내 통화에 한해 적용되며, 해외 사용은 별도의 로밍 요금으로 적용됩니다.<br>
+   기본제공량 초과 시, 아래의 기준 요율에 따라 과금됩니다. </p><p>
+    </p>
+</div>
+</div><div class="plan-sect">
+					<div class="heading-depth2">
+						<h3 class="title text-primary">요금제 상세 요율</h3>
+					</div>
+					<table class="tb mt-3">
+						<caption>문자(항목, 요율)(항목, 요율정보제공) </caption>
+						<colgroup>
+							<col style="width:auto">
+							<col style="width:40%">
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">항목</th>
+								<th scope="col">요율</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>데이터</td>
+								<td>22.5 원/MB</td>
+							</tr>
+							<tr>
+								<td>음성통화</td>
+								<td>1.98 원/초</td>
+							</tr>
+
+							<tr>
+								<td>영상통화</td>
+								<td>3.3 원/초</td>
+							</tr>
+							<tr>
+								<td>SMS(80byte/한글 40자 이하 단문메시지)</td>
+								<td>22 원/건</td>
+							</tr>
+							<tr>
+								<td>LMS(80 ~ 2,000byte/한글 1,000자 이하 장문메시지)</td>
+								<td>33원/건</td>
+							</tr>
+							<tr>
+								<td>MMS_텍스트(2,000byte 초과하는 장문메시지)</td>
+								<td>33원/건</td>
+							</tr>
+							<tr>
+								<td>MMS_멀티미디어(이미지,소리 등이 첨부된 문자메시지)</td>
+								<td>110원/건</td>
+							</tr>
+						</tbody>
+					</table>
+				</div><div class="heading-depth2">
+           <h3 class="title text-primary">요금제 이용 시 기본 혜택</h3>
+</div>
+
+
+<div class="plan-detail">
+<div class="plan-sect">
+           <table class="tb">
+                     <caption>요금제 이용 시 제공되는 서비스(서비스명, 설명)(서비스명, 설명정보제공) </caption>
+                     <colgroup>
+                                <col class="col-pc" style="width:28%">
+                                <col class="col-mob" style="width:40%">
+                                <col style="width:auto">
+                     </colgroup>
+                     <thead>
+                                <tr>
+                                           <th scope="col">서비스명</th>
+                                           <th scope="col">설명</th>
+                                </tr>
+                     </thead>
+                     <tbody>
+                                <tr>
+                                           <td class="text-left"><span class="ic-planService1">M-WiFi</span></td>
+                                           <td class="text-left">T WiFi Zone에서 무선 인터넷 무료 이용 <br>*T WiFi 접속 불가 시, M-WiFi 부가서비스 가입을 통해 MAC주소를 등록하세요. </td>
+                                </tr>
+                                <tr>
+                                           <td class="text-left"><span class="ic-planService2">m-VoIP</span></td>
+                                           <td class="text-left">카톡 보이스톡, 페이스톡 등 데이터망을 이용한 무료 음성/영상통화를 제공하는 서비스<br>* 기본제공 데이터 내 이용가능</td>
+                                </tr>
+                                <tr>
+                                           <td class="text-left"><span class="ic-planService3">데이터테더링</span></td>
+                                           <td class="text-left">기본제공 데이터를 태블릿, 노트북, 다른 휴대폰에 공유하는 서비스<br>* 테더링 한도: 15GB</td>
+                                </tr>
+
+                     </tbody>
+           </table>
+</div>
+</div><!---- 21.11.25요금제변경 임시 히든
+<div class="heading-depth2">
+	<h3 class="title text-primary">같이 비교해보세요.</h3>
+</div>
+<div class="plan-detail">
+	<table class="tb">
+		<caption>비교</caption>
+		<colgroup>
+			<col style="width:auto">
+			<col style="width: 50%">
+		</colgroup>
+		<thead>
+			<tr>
+				<th scope="col">취향저격 카페타임 (15GB+/100분)</th>
+				<th scope="col">취향저격 카페타임 (11GB+/통화맘껏)</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><strong class="text-bg">15GB</strong> 기본제공 <br class="d-lg-none">소진 시,<br>최대 3Mbps <br class="d-lg-none">무제한</strong></td>
+				<td><strong class="text-bg">11GB</strong> 기본제공 <br class="d-lg-none">소진 시,<br>일 2GB+ 최대 3Mbps<br class="d-lg-none">무제한</strong></td>
+			</tr>
+			<tr>
+				<td>투썸플레이스쿠폰 5,000원 </td>
+				<td>투썸플레이스쿠폰 5,000원 </td>
+			</tr>
+			<tr>
+				<td>100분/100건</td>
+				<td>무제한</td>
+			</tr>
+			<tr>
+				<td class="text-under"><a href="https://www.sk7mobile.com/shop/mobile/usimList.do?salePlcyCd=0000975698&postTp=1&refer=callingPlanViewcmp" >27,500원</a></td>
+				<td class="text-under"><a href="https://www.sk7mobile.com/prod/data/callingPlanView.do?prodCd=PD00000355&refer=callingPlanViewcmp" >34,980원</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<ul class="lst-dot">
+ <li>3Mbps : 스트리밍 음악 및 실시간 동영상(720p 해상도) 을 끊김 없이 볼 수 있는 속도</li>
+</ul>
+----><div class="heading-depth2">
+					<h3 class="title text-primary">함께하면 좋은 부가서비스</h3>
+				</div>
+				<div class="swiper-container add-service-swiper swiper-container-horizontal">
+					<div class="swiper-wrapper add-service"><div class="swiper-slide swiper-slide-active" style="width: 272.131px;">
+							<div class="contWrap">
+								<ul class="cont">
+									<li class="badge-wp"><span class="badge1">통화편의</span></li>
+									<li class="item"><strong>콜키퍼</strong></li>
+									
+										<li class="cost"><b class="text-danger">
+								 				월550원</b></li></ul>
+									<a href="/prod/data/addServiceView.do?refCode=P000SRCLKP" class="ads-link">자세히보기</a>
+								</div>
+							</div>
+						<div class="swiper-slide swiper-slide-next" style="width: 272.131px;">
+							<div class="contWrap">
+								<ul class="cont">
+									<li class="badge-wp"><span class="badge1">통화편의</span></li>
+									<li class="item"><strong>통화중대기</strong></li>
+									
+										<li class="cost"><b class="text-danger">무료</b></li>
+							 			</ul>
+									<a href="/prod/data/addServiceView.do?refCode=P000SCALLP" class="ads-link">자세히보기</a>
+								</div>
+							</div>
+						<div class="swiper-slide" style="width: 272.131px;">
+							<div class="contWrap">
+								<ul class="cont">
+									<li class="badge-wp"><span class="badge1">개인정보보호</span></li>
+									<li class="item"><strong>T RING</strong></li>
+									
+										<li class="cost"><b class="text-danger">무료</b></li>
+							 			</ul>
+									<a href="/prod/data/addServiceView.do?refCode=P000STRING" class="ads-link">자세히보기</a>
+								</div>
+							</div>
+						</div>
+				<span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+				<div class="acc-group acc-type1" data-accordion="true">
+					<dl class="acc-item active">
+						<dt class="acc-head">
+							<button class="btn btn-toggle" type="button" role="button" title="닫기">유의사항</button>
+						</dt>
+						<dd class="acc-body" role="region" aria-hidden="false" aria-expanded="true">
+							<div class="acc-content" style="display: block;">
+								<ul class="lst-dot"><ul class="lst-bullet">
+
+ <li>요금제의 프로모션 할인금액은 변경될 수 있으며 고객님의 개통일을 기준으로 프로모션 할인 금액이 적용됩니다. </li>
+ <li>현재 SK 텔레콤을 이용중이신 고객님들도 '번호이동'으로 가입하셔야 하며, 번호이동 시 기존 통신사의 위약금 사전 확인을 권장드립니다. (번호이동 시 기존 통신사는 자동으로 해지) </li>
+ <li>이용 중 해지, 정지, 다른 요금제로 변경 시에는 사용한 기간만큼 프로모션 할인 금액이 적용됩니다.  </li>
+ <li>취향저격 구독팩 쿠폰은 요금제 신규 가입 혹은 변경 시 제공되며 월 1회, 24개월 간 제공됩니다. </li>
+ <li> 쿠폰 발급은 가입/변경 후 익월말 (M+1월) 개통상태 확인 후 익익월 (M+2월) 첫째 주 발급됩니다. </li>
+예시) 5월 1일 ~ 5월 31일 가입 → 6월말 개통상태 확인 (6월 한달동안 해지, 일시정지 이력 있을 경우 대상 제외) → 7월 첫째 주 쿠폰 발급 <br>
+ <li> 쿠폰은 개통하신 휴대폰 번호로 MMS 발송됩니다. </li>
+ <li> 변경된 번호로 발송은 불가하며, 번호변경으로 인하여 쿠폰 수신이 이루어지지 않을 경우 당사는 책임지지 않습니다. </li>
+ <li> 쿠폰의 유효기간은 발급일로부터 30일입니다. (30일 이내 미사용 시 소멸되며, 소멸 후 재발급이 불가합니다.) </li>
+ <li> 파리바게트, CU, 투썸플레이스 쿠폰은 30일 내 오프라인 매장에서, 쿠팡이츠 쿠폰은 30일내 쿠팡이츠 APP에서, 올리브영 쿠폰은 온/오프라인 결제수단으로 사용 가능합니다. </li>
+ <li>쿠폰 재발급 (유효기간내), 사용여부 확인은 GS엠비즈 고객센터를 통해 문의 가능합니다. (GS엠비즈 고객센터 1544-1151) </li>
+ <li> 상품권 발송 대행을 위해 개인정보(이름,전화번호)가 GS엠비즈에 제공됩니다. </li>
+ <li> 타 요금제로부터의 변경 및 취향저격 구독팩 요금제간 변경은 가능하나, 매월말 개통상태 확인 시점 가입 요금제를 기준으로 쿠폰이 지급됩니다.  </li>
+ <li> 쿠폰은 정책에 따라 타 상품으로 대체 증정될 수 있습니다. </li>
+
+</ul></ul><div class="text-right">
+									<a href="javascript:void(0);" class="text-link" data-toggle="modal" data-target=".modal-planGuide">자세히보기</a>
+								</div></div>
+						</dd>
+					</dl>
+				</div>
+				<div class="btn-wrap item2-1">
+					<span>
+						<a href="javascript:void(0);" class="btn btn-secondary btn-lg" onclick="fnSearchList();">목록</a>
+					</span>
+					<span>
+						<a href="javascript:void(0);" onclick="fnLoginForward('/cust/post/changePlan.do');" class="btn btn-primary btn-lg">요금제 조회/변경</a>
+					</span>
+					<span><a href="/shop/mobile/usimList.do?salePlcyCd=1000042429" class="btn btn-danger btn-lg"><i>요금제 가입하기</i></a></span></div></div>
+		</div>
+
+
+
+<div class="container">
+				<div class="heading-depth1 text-left mb-3">
+					<div class="badge-wp"><span class="badge1">LTE</span><span class="badge2">프로모션 할인</span></div>
+					<form id="frm" name="frm">
+						<input type="hidden" id="refCode" name="refCode" value="USIM">
+						<input type="hidden" id="searchCallPlanType" name="searchCallPlanType" value="PROD_USIM_TYPE_014">
+						<input type="hidden" id="searchOrderby" name="searchOrderby" value="4"></form>
+					<h2 class="title">롯데시네마 (11GB+/통화맘껏)</h2>
+					<p class="sub text-default font-weight-normal mt-1"><span>데이터, 통화 무제한에 롯데시네마도 무제한급 혜택으로 이용해보세요</span></p>
+				</div>
+				<div class="plan-info">
+					<div class="data-wp">
+						<ul><li><span class="sr-only">데이터 제공량</span><i class="icon-data"></i><p>11GB</p>
+							</li><li><span class="sr-only">음성 제공량</span><i class="icon-call"></i><p>기본제공</p>
+							</li><li><span class="sr-only">문자 제공량</span><i class="icon-sms"></i><p>기본제공</p></li></ul>
+					</div>
+					<div class="price-wp">
+						<div class="price-lst"><div class="item1"> <em>기본료</em> <p><b>51,260</b>원</p> </div><div class="item2"> <em>프로모션 할인 후 기본료</em> <p><b>37,600</b>원</p> </div></div><button type="button" class="btn btn-primary" onclick="location.href='/shop/mobile/usimList.do?salePlcyCd=1000049405';">지금 가입하기</button></div>
+				</div><div class="heading-depth2">
+<h3 class="title text-primary">※모두의결합 +20GB 대상요금제 </h3>
+</div>
+
+
+<div class="heading-depth2">
+<div class="plan-detail">
+           <div class="plan-sect">
+                     <p class="tit-sub"> 추천받고 가입하면 친구도 나도 매월 데이터를 더 받는 요금제</p>
+                    <ul class="lst-dot">
+                     <li>프로모션 기간 내 추천받고 가입하면, 모두의결합 대상요금제를 이용하는 추천인/피추천인에게 추가 데이터가 제공됩니다.   </li>
+                     <li>모두의결합 데이터는 익월 초부터 적용되며, 대상 요금제 유지 시 최대 24개월간 제공됩니다.  </li>
+                      <li>모두의결합 데이터는 m-VoIP 및 테더링으로 이용 가능가능합니다. (데이터 소진 순서 : 모두의결합 &gt; (구)데이터플러스 &gt; 기본제공데이터 &gt; QoS)</li>
+                    </ul>
+           </div>
+</div>
+
+
+<!-- 롯데시네마 혜택 안내 -->
+		<div class="heading-depth2 mb-1">
+			<h3 class="title text-lightning">롯데시네마 혜택 안내</h3>
+		</div>
+		<div class="plan-detail">
+			<div class="plan-sect">
+				<div class="row">
+					<div class="col-lg-7">
+						<p class="tit-sub">요금제 가입 후 24개월 동안 매월 롯데시네마 혜택 무료 제공</p>
+						<ul class="lst-dot">
+							<li>롯데시네마 혜택 : 2D 무료관람권 + 스위트콤보 3천원 할인권 </li>
+							<li>롯데시네마 혜택은 본 요금제의 가입 및 이용 시에만 제공되며<br>
+요금제 가입 익월 가입자번호로 발송되는 LMS 쿠폰번호를 롯데시네마 앱에서 개별등록하여 사용</li>
+							<li>매월 말일 기준 요금제를 유지하고 있는 고객에 한해 혜택이 정기발송되며<br>
+관람권 및 할인권을 매월 신규 등록하여 이용</li>
+							<li>요금제 해지/정지/요금제 변경 시 해당 혜택 제공은 중단됨 </li>
+
+						</ul>
+					</div>
+
+					<div class="col-lg-5 text-lg-right">
+						<div class="data-plus">
+							<div class="lightning">
+								<p>롯데시네마<br>혜택</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<!-- //롯데시네마 혜택 안내 -->
+
+
+<div class="heading-depth2">
+ <h3 class="title text-primary">기본 제공량 이용안내</h3>
+</div>
+<div class="plan-detail">
+ <!-- 데이터 -->
+ <div class="plan-sect">
+  <div class="row">
+   <div class="col-lg-6">
+    <strong class="tit">데이터</strong>
+    <p class="tit-sub">11GB 기본제공 후 소진 시, 매일 2GB 추가 제공!<br>추가제공까지 모두 소진 시, 최대 3Mbps 속도로 무제한 이용 가능</p>
+    <ul class="lst-dot">
+     <li>3Mbps : 스트리밍 음악 및 실시간 동영상(720p 해상도) 을 끊김 없이 볼 수 있는 속도</li>
+    </ul>
+   </div>
+   <div class="col-lg-6 text-lg-right">
+    <div class="data-plus">
+     <div class="item1">
+      <p><i class="icon-data1"></i><br>11GB<br>기본제공</p>
+     </div>
+     <span class="plus"></span>
+     <div class="item2">
+      <p>추가제공<br>일 2GB<br>+ 최대 3Mbps<br>무제한!</p>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+ <!-- //데이터 -->
+ <!-- 통화 -->
+ <div class="plan-sect">
+  <strong class="tit">통화</strong>
+  <p class="tit-sub">HD Voice 음성통화를 포함하여 집전화 이동전화 무제한 이용 가능</p>
+  <p class="tit-sub">부가통화 300분 기본 제공, 소진 시 기준요율에 따라 과금 (음성통화 기본제공량과 무관)</p>
+  <ul class="lst-dot">
+   <li>부가통화 1초 이용 시 부가통화 제공량에서 1초 차감</li>
+   <li>영상통화 1초 이용 시 부가통화 제공량에서 1.66초 차감</li>
+  </ul>
+  <p class="text-info text-grey">
+   ※부가통화란?<br>전국 대표번호(15XX, 16XX, 18XX 등), 개인번호서비스(050, 060 등), 0130, 011-200, 011-700, 지역번호+153/141/700 등의 전화번호로 하는 통화
+  </p>
+ </div>
+ <!-- //통화 -->
+ <!-- 문자 -->
+ <div class="plan-sect">
+  <strong class="tit">문자</strong>
+  <p class="tit-sub">SK텔레콤, KT, 유플러스 등 사업자 관계 없이 무제한으로 이용 가능</p>
+  <ul class="lst-dot">
+   <li>음성통화 및 문자 기본 혜택을 악용하는 이용자를 방지 하기 위해 Fair Use Policy 정책이 적용될 수 있습니다. <a href="#" class="text-link ml-2" data-toggle="modal" data-target=".modal-planGuide">자세히보기</a></li>
+  </ul>
+ </div>
+<!-- //공통안내 -->
+ <div class="plan-sect">
+    <p class="tit-sub">데이터 및 음성통화 기본 제공량은 국내 통화에 한해 적용되며, 해외 사용은 별도의 로밍 요금으로 적용됩니다.<br>
+   기본제공량 초과 시, 아래의 기준 요율에 따라 과금됩니다. </p><p>
+    </p>
+</div>
+</div><div class="plan-sect">
+					<div class="heading-depth2">
+						<h3 class="title text-primary">요금제 상세 요율</h3>
+					</div>
+					<table class="tb mt-3">
+						<caption>문자(항목, 요율)(항목, 요율정보제공) </caption>
+						<colgroup>
+							<col style="width:auto">
+							<col style="width:40%">
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">항목</th>
+								<th scope="col">요율</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>데이터</td>
+								<td>22.5 원/MB</td>
+							</tr>
+							<tr>
+								<td>음성통화</td>
+								<td>1.98 원/초</td>
+							</tr>
+
+							<tr>
+								<td>영상통화</td>
+								<td>3.3 원/초</td>
+							</tr>
+							<tr>
+								<td>SMS(80byte/한글 40자 이하 단문메시지)</td>
+								<td>22 원/건</td>
+							</tr>
+							<tr>
+								<td>LMS(80 ~ 2,000byte/한글 1,000자 이하 장문메시지)</td>
+								<td>33원/건</td>
+							</tr>
+							<tr>
+								<td>MMS_텍스트(2,000byte 초과하는 장문메시지)</td>
+								<td>33원/건</td>
+							</tr>
+							<tr>
+								<td>MMS_멀티미디어(이미지,소리 등이 첨부된 문자메시지)</td>
+								<td>110원/건</td>
+							</tr>
+						</tbody>
+					</table>
+				</div><div class="heading-depth2">
+           <h3 class="title text-primary">요금제 이용 시 기본 혜택</h3>
+</div>
+
+
+<div class="plan-detail">
+<div class="plan-sect">
+           <table class="tb">
+                     <caption>요금제 이용 시 제공되는 서비스(서비스명, 설명)(서비스명, 설명정보제공) </caption>
+                     <colgroup>
+                                <col class="col-pc" style="width:28%">
+                                <col class="col-mob" style="width:40%">
+                                <col style="width:auto">
+                     </colgroup>
+                     <thead>
+                                <tr>
+                                           <th scope="col">서비스명</th>
+                                           <th scope="col">설명</th>
+                                </tr>
+                     </thead>
+                     <tbody>
+                                <tr>
+                                           <td class="text-left"><span class="ic-planService1">M-WiFi</span></td>
+                                           <td class="text-left">T WiFi Zone에서 무선 인터넷 무료 이용 <br>*T WiFi 접속 불가 시, M-WiFi 부가서비스 가입을 통해 MAC주소를 등록하세요. </td>
+                                </tr>
+                                <tr>
+                                           <td class="text-left"><span class="ic-planService2">m-VoIP</span></td>
+                                           <td class="text-left">카톡 보이스톡, 페이스톡 등 데이터망을 이용한 무료 음성/영상통화를 제공하는 서비스<br>* 기본제공 데이터 내 이용가능</td>
+                                </tr>
+                                <tr>
+                                           <td class="text-left"><span class="ic-planService3">데이터테더링</span></td>
+                                           <td class="text-left">기본제공 데이터를 태블릿, 노트북, 다른 휴대폰에 공유하는 서비스<br>* 테더링 한도: 11GB</td>
+                                </tr>
+                                <tr>
+                                           <td class="text-left"><span class="ic-planService5">부가통화 300분 </span></td>
+                                           <td class="text-left">전국대표번호 (1544,1588,1599 등) 및 전화정보 서비스 (060) 등 부가음성통화 시 과금없이 무료로 이용 가능<br>* 부가통화제공량이 없는 경우, 음성 기본음성 제공량에서 요율에 따라 차감 진행<br>* 부가통화제공량이 있는 경우, 제공량 소진 시 요율에 따라 과금 발생 (음성 기본제공 잔여량과 무관)</td>
+                                </tr>
+                     </tbody>
+           </table>
+</div>
+</div><div class="acc-group acc-type1" data-accordion="true">
+					<dl class="acc-item active">
+						<dt class="acc-head">
+							<button class="btn btn-toggle" type="button" role="button" title="닫기">유의사항</button>
+						</dt>
+						<dd class="acc-body" role="region" aria-hidden="false" aria-expanded="true">
+							<div class="acc-content" style="display: block;">
+								<ul class="lst-dot"><ul class="lst-bullet">
+ <li>요금제의 프로모션 할인금액은 변경될 수 있으며 고객님의 개통일을 기준으로 프로모션 할인 금액이 적용됩니다.</li>
+  <li>요금제 변경을 원하시는 기존 SK 세븐모바일 고객님의 경우 고객센터(114)를 통하여 요금제 변경을 신청해주시기 바랍니다. 신청일 기준으로 프로모션 할인 금액이 적용되며, 요금제에 따라 위약금이 발생할 수 있습니다. </li>
+ <li>선불, 복지, 청소년 요금제 이용 고객님의 경우 고객센터를 통한 요금제 변경 상담을 부탁드립니다.</li>
+  <li>현재 SK 텔레콤을 이용중이신 고객님들도 '번호이동'으로 가입하셔야 하며, 번호이동 시 기존 통신사의 위약금 사전 확인을 권장드립니다. (번호이동 시 기존 통신사는 자동으로 해지)</li>
+  <li>유심요금제 프로모션 할인 혜택은 해지 전까지 평생 적용되며, 가입 첫달은 일할 할인 계산됩니다. (할인 금액이 포함된 요금은 명세서에서 확인이 가능하며, 실시간 요금 조회에서는 확인 불가)</li>
+  <li>이용 중 해지, 정지, 요금제 변경 시 사용한 기간만큼 프로모션 할인 금액이 적용됩니다. </li>
+
+
+  <li> 롯데시네마 제휴요금제 유지 기간 중 ‘롯데시네마 혜택’ 최대 24개월간 제공 (정기발송) <br>
+- 롯데시네마 혜택 : 2D 일반상영관 영화 무료 관람권 1 매, 콤보 3천원 할인권 1매 <br>
+- 최초 관람권 및 할인권 제공은 사용,개통월(M월)을 기준으로 익월(M+1월) 15일경에 발급되며, 이후 매월 요금제를 유지하고 있는 고객에 한해 15일경 롯데시네마 관림권 및 할인권이 정기발송(해지,정지 고객 제외)  <br> 
+- 가입자 번호로 LMS 쿠폰이 발송되며, 해당 쿠폰번호를 롯데시네마 Web/App에서 개별 등록 후 이용 가능 <br> 
+- 해당 관람권 및 할인권은 발송일로부터 30일간 유효 <br> 
+- ‘롯데시네마 혜택’은 지점, 영화 포맷, 상영관, 좌석, 이벤트 메뉴 여부 등에 따라 사용이 제한될 수 있음 <br>
+- ‘롯데시네마 혜택’ 고객 미사용에 따른 환불, 보상은 불가 <br> 
+- 롯데시네마 요금제 외 타 요금제로 변경, 명의변경, 일시정지, 해지 시 혜택 제공 중단  <br>
+- 롯데시네마 혜택 상세 내용은 롯데시네마 약관 및 당사 홈페이지 공지사항을 준용함. </li>
+  </ul></ul><div class="text-right">
+									<a href="javascript:void(0);" class="text-link" data-toggle="modal" data-target=".modal-planGuide">자세히보기</a>
+								</div></div>
+						</dd>
+					</dl>
+				</div>
+				<div class="btn-wrap item2-1">
+					<span>
+						<a href="javascript:void(0);" class="btn btn-secondary btn-lg" onclick="fnSearchList();">목록</a>
+					</span>
+					<span>
+						<a href="javascript:void(0);" onclick="fnLoginForward('/cust/post/changePlan.do');" class="btn btn-primary btn-lg">요금제 조회/변경</a>
+					</span>
+					<span><a href="/shop/mobile/usimList.do?salePlcyCd=1000049405" class="btn btn-danger btn-lg"><i>요금제 가입하기</i></a></span></div></div>
+		</div>
+
+<div class="container">
+				<div class="heading-depth1 text-left mb-3">
+					<div class="badge-wp"><span class="badge1">3G</span></div>
+					<form id="frm" name="frm">
+						<input type="hidden" id="refCode" name="refCode" value="PHONE">
+						<input type="hidden" id="searchCallPlanType" name="searchCallPlanType" value="PROD_LTE_TYPE_ALL">
+						<input type="hidden" id="searchOrderby" name="searchOrderby" value="4"></form>
+					<h2 class="title">NEW 키즈표준</h2>
+					<p class="sub text-default font-weight-normal mt-1"><span>우리 아이를 위한 전용 요금제 (만 13세 미만 가입 가능)</span></p>
+				</div>
+				<div class="plan-info">
+					<div class="data-wp">
+						<ul><li><span class="sr-only"></span><i class="ico total only"></i><p>기본 제공 혜택 11,000원(데이터/음성/문자)<br>+SMS(문자)50건</p></li></ul>
+					</div>
+					<div class="price-wp">
+						<div class="price-lst"><div class="item2"> <em>기본료</em> <p><b>11,000</b>원</p> </div></div></div>
+				</div><div class="plan-sect">
+					<div class="heading-depth2">
+						<h3 class="title text-primary">요금제 상세 요율</h3>
+					</div>
+					<table class="tb mt-3">
+						<caption>문자(항목, 요율)(항목, 요율정보제공) </caption>
+						<colgroup>
+							<col style="width:auto">
+							<col style="width:40%">
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">항목</th>
+								<th scope="col">요율</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>데이터</td>
+								<td>56.3 원/MB</td>
+							</tr>
+							<tr>
+								<td>음성통화</td>
+								<td>2.75 원/초</td>
+							</tr>
+
+							<tr>
+								<td>영상통화</td>
+								<td>2.7 원/초</td>
+							</tr>
+							<tr>
+								<td>SMS(80byte/한글 40자 이하 단문메시지)</td>
+								<td>16 원/건</td>
+							</tr>
+							<tr>
+								<td>LMS(80 ~ 2,000byte/한글 1,000자 이하 장문메시지)</td>
+								<td>28원/건</td>
+							</tr>
+							<tr>
+								<td>MMS_텍스트(2,000byte 초과하는 장문메시지)</td>
+								<td>28원/건</td>
+							</tr>
+							<tr>
+								<td>MMS_멀티미디어(이미지,소리 등이 첨부된 문자메시지)</td>
+								<td>110원/건</td>
+							</tr>
+						</tbody>
+					</table>
+				</div><div class="heading-depth2">
+           <h3 class="title text-primary">요금제 이용 시 기본 혜택</h3>
+</div>
+
+
+<div class="plan-detail">
+<div class="plan-sect">
+           <table class="tb">
+                     <caption>요금제 이용 시 제공되는 서비스(서비스명, 설명)(서비스명, 설명정보제공) </caption>
+                     <colgroup>
+                                <col class="col-pc" style="width:28%">
+                                <col class="col-mob" style="width:40%">
+                                <col style="width:auto">
+                     </colgroup>
+                     <thead>
+                                <tr>
+                                           <th scope="col">서비스명</th>
+                                           <th scope="col">설명</th>
+                                </tr>
+                     </thead>
+                     <tbody>
+                                <tr>
+                                           <td class="text-left"><span class="ic-planService1">M-WiFi</span></td>
+                                           <td class="text-left">T WiFi Zone에서 무선 인터넷 무료 이용 <br>*T WiFi 접속 불가 시, M-WiFi 부가서비스 가입을 통해 MAC주소를 등록하세요. </td>
+
+                                </tr>
+                     </tbody>
+           </table>
+</div>
+</div><div class="heading-depth2">
+					<h3 class="title text-primary">함께하면 좋은 부가서비스</h3>
+				</div>
+				<div class="swiper-container add-service-swiper swiper-container-horizontal">
+					<div class="swiper-wrapper add-service"><div class="swiper-slide swiper-slide-active" style="width: 272.131px;">
+							<div class="contWrap">
+								<ul class="cont">
+									<li class="badge-wp"><span class="badge1">청소년보호</span></li>
+									<li class="item"><strong>자녀요금통보 서비스</strong></li>
+									
+										<li class="cost"><b class="text-danger">무료</b></li>
+							 			</ul>
+									<a href="/prod/data/addServiceView.do?refCode=PC00S00009" class="ads-link">자세히보기</a>
+								</div>
+							</div>
+						<div class="swiper-slide swiper-slide-next" style="width: 272.131px;">
+							<div class="contWrap">
+								<ul class="cont">
+									<li class="badge-wp"><span class="badge1">청소년보호</span></li>
+									<li class="item"><strong>청소년 안심 부가서비스</strong></li>
+									
+										<li class="cost"><b class="text-danger">무료</b></li>
+							 			</ul>
+									<a href="/prod/data/addServiceView.do?refCode=PC00S00015" class="ads-link">자세히보기</a>
+								</div>
+							</div>
+						<div class="swiper-slide" style="width: 272.131px;">
+							<div class="contWrap">
+								<ul class="cont">
+									<li class="badge-wp"><span class="badge1">개인정보보호</span></li>
+									<li class="item"><strong>T RING</strong></li>
+									
+										<li class="cost"><b class="text-danger">무료</b></li>
+							 			</ul>
+									<a href="/prod/data/addServiceView.do?refCode=P000STRING" class="ads-link">자세히보기</a>
+								</div>
+							</div>
+						<div class="swiper-slide" style="width: 272.131px;">
+							<div class="contWrap">
+								<ul class="cont">
+									<li class="badge-wp"><span class="badge1">통화편의</span></li>
+									<li class="item"><strong>통화중대기</strong></li>
+									
+										<li class="cost"><b class="text-danger">무료</b></li>
+							 			</ul>
+									<a href="/prod/data/addServiceView.do?refCode=P000SCALLP" class="ads-link">자세히보기</a>
+								</div>
+							</div>
+						</div>
+				<span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+				<div class="acc-group acc-type1" data-accordion="true">
+					<dl class="acc-item active">
+						<dt class="acc-head">
+							<button class="btn btn-toggle" type="button" role="button" title="닫기">유의사항</button>
+						</dt>
+						<dd class="acc-body" role="region" aria-hidden="false" aria-expanded="true">
+							<div class="acc-content" style="display: block;">
+								<ul class="lst-dot">○ 만 13세 미만의 청소년 가입자에 한해 가입가능(단, 청소년 요금제의 경우 1인 1회선 가입 가능)<br>
+○ 가입제한연령 초과후 1년 이내 타 요금제로 변경을 하지 않을 경우 만14세 되는일의 익월 중 표준요금제로 자동전환되며, 자동 전환되는 달의 전월 중에 해당고객에게 사전 고지함<br>
+- 요금전환 시기에 표준요금제 가입이 제한되는 경우, 유사 요금제로 전환 가입 가능<br>
+○ 국제전화 발신 및 해외 SMS 발신, 국제로밍서비스 이용불가<br>
+- 단 해외 SMS 발신은 법정대리인 동의시 이용가능<br>
+○ 기본제공 금액은 국내음성/영상, MMS 텍스트, MMS 멀티미디어, DATA통화로 사용가능<br>
+- SMS : 16.5원/건, MMS(텍스트) 27.5원/건, MMS(멀티미디어) 110원/건, 음성/영상통화, 2.75원/초, 데이터 0.0275원/0.5KB로 기본제공금액 차감<br>
+- 기본제공 통화 소진시 발신이 정지됨(수신은 가능)<br>
+○ 기본제공 금액 내 DATA 사용가능 금액은 5,500원으로 자동 설정<br>
+- 월 중 변경(요금제변경등) 및 정지시 일할계산하여 관리하며, 상한관리금액이 변동 될 수 있음<br>
+ㅇ기본제공금액을 다 쓴 후에는 월 22,000원 내에서 5,500원 단위로 충전하여 이용 가능<br>
+ㅇ월중 변경(요금제변경등) 및 정지시에는 기본제공금액은 일할계산하여 제공하며, 청구금액이 상한 금액을 초과할 수 있음<br>
+ㅇ 상한관리 대상 제외 항목<br>
+- 세금(부가세 등), 컬러링서비스 등 유료 부가서비스 이용요금, 데이터정액제등 월정액요금, 정보이용료, 음성정보이용료, KT 114 전화번호안내서비스 이용요금, KT번호안내직접연결서비스 이용요금 및 통화료, 데이콤다자간콜렉트콜서비스 이용요금, 수신자부담계열 요금, 소액결제이용료, 아름다운통화 기부금 등<br>
+ㅇ 데이터선택요금제와 동시 이용 불가<br>
+ㅇ 상업적인 목적으로 착신전환등 통상적이지 않은 수단을 통해 이용하거나 부정한 방법에 의한 통화 이용(ex. 기본제공금액 소진 직전 통화 지속 등) 지속 시 이용이 제한될 수 있음<br>
+ㅇ 한도소진 해제(한도 생성)는 매월 1일 0시기준으로 생성되나 전산/기술적 사유에 의해 불가피한 경우 한도소진 해제(생성)는 지연될 수 있음<br>
+○본 요금제 이용 시, 데이터테더링 및 LTE 안심옵션 가입은 불가합니다.<br></ul><div class="text-right">
+									<a href="javascript:void(0);" class="text-link" data-toggle="modal" data-target=".modal-planGuide">자세히보기</a>
+								</div></div>
+						</dd>
+					</dl>
+				</div>
+				<div class="btn-wrap item2-1">
+					<span>
+						<a href="javascript:void(0);" class="btn btn-secondary btn-lg" onclick="fnSearchList();">목록</a>
+					</span>
+					<span>
+						<a href="javascript:void(0);" onclick="fnLoginForward('/cust/post/changePlan.do');" class="btn btn-primary btn-lg">요금제 조회/변경</a>
+					</span>
+					<span>
+							<a href="/shop/mobile/phonList.do?refer=callingPlanView" class="btn btn-danger btn-lg"><i>결합할 휴대폰 보러가기</i></a>
+						</span>
+					</div></div>
+
+<div class="container">
+				<div class="heading-depth1 text-left mb-3">
+					<div class="badge-wp"><span class="badge1">5G</span><span class="badge2">프로모션 할인</span></div>
+					<form id="frm" name="frm">
+						<input type="hidden" id="refCode" name="refCode" value="USIM">
+						<input type="hidden" id="searchCallPlanType" name="searchCallPlanType" value="PROD_USIM_TYPE_ALL">
+						<input type="hidden" id="searchOrderby" name="searchOrderby" value="4"></form>
+					<h2 class="title">5G 유심 (15GB+/통화맘껏)</h2>
+					<p class="sub text-default font-weight-normal mt-1"><span>5G  휴대폰과 이용해보세요</span></p>
+				</div>
+				<div class="plan-info">
+					<div class="data-wp">
+						<ul><li><span class="sr-only">데이터 제공량</span><i class="icon-data"></i><p>15GB</p>
+							</li><li><span class="sr-only">음성 제공량</span><i class="icon-call"></i><p>기본제공</p>
+							</li><li><span class="sr-only">문자 제공량</span><i class="icon-sms"></i><p>기본제공</p></li></ul>
+					</div>
+					<div class="price-wp">
+						<div class="price-lst"><div class="item1"> <em>기본료</em> <p><b>44,000</b>원</p> </div><div class="item2"> <em>프로모션 할인 후 기본료</em> <p><b>35,200</b>원</p> </div></div><button type="button" class="btn btn-primary" onclick="location.href='/shop/mobile/usimList.do?salePlcyCd=1000055573';">지금 가입하기</button></div>
+				</div><div class="heading-depth2">
+ <h3 class="title text-primary">기본 제공량 이용안내</h3>
+</div>
+<div class="plan-detail">
+ <!-- 데이터 -->
+ <div class="plan-sect">
+  <div class="row">
+   <div class="col-lg-6">
+    <strong class="tit">데이터</strong>
+    <p class="tit-sub">15GB 기본제공 후 소진 시, 최대 1Mbps 속도로 무제한 이용 가능</p>
+    <ul class="lst-dot">
+     <li>1Mbps : 스트리밍 음악 및 실시간 동영상(480p 해상도) 을 끊김 없이 볼 수 있는 속도</li>
+    </ul>
+   </div>
+   <div class="col-lg-6 text-lg-right">
+    <div class="data-plus">
+     <div class="item1">
+      <p><i class="icon-data1"></i><br>15GB<br>기본제공</p>
+     </div>
+     <span class="plus"></span>
+     <div class="item2">
+      <p>소진 시, <br> 최대 1Mbps<br>무제한!</p>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+ <!-- //데이터 -->
+ <!-- 통화 -->
+ <div class="plan-sect">
+  <strong class="tit">통화</strong>
+  <p class="tit-sub">HD Voice 음성통화를 포함하여 집전화 이동전화 무제한 이용 가능</p>
+  <p class="tit-sub">부가통화 300분 기본 제공, 소진 시 기준요율에 따라 과금 (음성통화 기본제공량과 무관)</p>
+  <ul class="lst-dot">
+   <li>부가통화 1초 이용 시 부가통화 제공량에서 1초 차감</li>
+   <li>영상통화 1초 이용 시 부가통화 제공량에서 1.66초 차감</li>
+  </ul>
+  <p class="text-info text-grey">
+   ※부가통화란?<br>전국 대표번호(15XX, 16XX, 18XX 등), 개인번호서비스(050, 060 등), 0130, 011-200, 011-700, 지역번호+153/141/700 등의 전화번호로 하는 통화
+  </p>
+ </div>
+ <!-- //통화 -->
+ <!-- 문자 -->
+ <div class="plan-sect">
+  <strong class="tit">문자</strong>
+  <p class="tit-sub">SK텔레콤, KT, 유플러스 등 사업자 관계 없이 무제한으로 이용 가능</p>
+  <ul class="lst-dot">
+   <li>음성통화 및 문자 기본 혜택을 악용하는 이용자를 방지 하기 위해 Fair Use Policy 정책이 적용될 수 있습니다. <a href="#" class="text-link ml-2" data-toggle="modal" data-target=".modal-planGuide">자세히보기</a></li>
+  </ul>
+ </div>
+<!-- //공통안내 -->
+ <div class="plan-sect">
+    <p class="tit-sub">데이터 및 음성통화 기본 제공량은 국내 통화에 한해 적용되며, 해외 사용은 별도의 로밍 요금으로 적용됩니다.<br>
+   기본제공량 초과 시, 아래의 기준 요율에 따라 과금됩니다. </p><p>
+    </p>
+</div>
+</div><div class="plan-sect">
+					<div class="heading-depth2">
+						<h3 class="title text-primary">요금제 상세 요율</h3>
+					</div>
+					<table class="tb mt-3">
+						<caption>문자(항목, 요율)(항목, 요율정보제공) </caption>
+						<colgroup>
+							<col style="width:auto">
+							<col style="width:40%">
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">항목</th>
+								<th scope="col">요율</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>데이터</td>
+								<td>22.5 원/MB</td>
+							</tr>
+							<tr>
+								<td>음성통화</td>
+								<td>1.98 원/초</td>
+							</tr>
+
+							<tr>
+								<td>영상통화</td>
+								<td>3.3 원/초</td>
+							</tr>
+							<tr>
+								<td>SMS(80byte/한글 40자 이하 단문메시지)</td>
+								<td>22 원/건</td>
+							</tr>
+							<tr>
+								<td>LMS(80 ~ 2,000byte/한글 1,000자 이하 장문메시지)</td>
+								<td>33원/건</td>
+							</tr>
+							<tr>
+								<td>MMS_텍스트(2,000byte 초과하는 장문메시지)</td>
+								<td>33원/건</td>
+							</tr>
+							<tr>
+								<td>MMS_멀티미디어(이미지,소리 등이 첨부된 문자메시지)</td>
+								<td>110원/건</td>
+							</tr>
+						</tbody>
+					</table>
+				</div><div class="heading-depth2">
+           <h3 class="title text-primary">요금제 이용 시 기본 혜택</h3>
+</div>
+
+
+<div class="plan-detail">
+<div class="plan-sect">
+           <table class="tb">
+                     <caption>요금제 이용 시 제공되는 서비스(서비스명, 설명)(서비스명, 설명정보제공) </caption>
+                     <colgroup>
+                                <col class="col-pc" style="width:28%">
+                                <col class="col-mob" style="width:40%">
+                                <col style="width:auto">
+                     </colgroup>
+                     <thead>
+                                <tr>
+                                           <th scope="col">서비스명</th>
+                                           <th scope="col">설명</th>
+                                </tr>
+                     </thead>
+                     <tbody>
+                                <tr>
+                                           <td class="text-left"><span class="ic-planService1">M-WiFi</span></td>
+                                           <td class="text-left">T WiFi Zone에서 무선 인터넷 무료 이용 <br>*T WiFi 접속 불가 시, M-WiFi 부가서비스 가입을 통해 MAC주소를 등록하세요. </td>
+                                </tr>
+                                <tr>
+                                           <td class="text-left"><span class="ic-planService2">m-VoIP</span></td>
+                                           <td class="text-left">카톡 보이스톡, 페이스톡 등 데이터망을 이용한 무료 음성/영상통화를 제공하는 서비스<br>* 기본제공 데이터 내 이용가능</td>
+                                </tr>
+                                <tr>
+                                           <td class="text-left"><span class="ic-planService3">데이터테더링</span></td>
+                                           <td class="text-left">기본제공 데이터를 태블릿, 노트북, 다른 휴대폰에 공유하는 서비스<br>* 테더링 한도: 15GB</td>
+                                </tr>
+                                <tr>
+                                           <td class="text-left"><span class="ic-planService5">부가통화 300분 </span></td>
+                                           <td class="text-left">전국대표번호 (1544,1588,1599 등) 및 전화정보 서비스 (060) 등 부가음성통화 시 과금없이 무료로 이용 가능<br>* 부가통화제공량이 없는 경우, 음성 기본음성 제공량에서 요율에 따라 차감 진행<br>* 부가통화제공량이 있는 경우, 제공량 소진 시 요율에 따라 과금 발생 (음성 기본제공 잔여량과 무관)</td>
+                                </tr>
+                     </tbody>
+           </table>
+</div>
+</div><!-- 
+
+23.02.21 미노출
+
+<div class="heading-depth2">
+	<h3 class="title text-primary">같이 비교해보세요.</h3>
+</div>
+<div class="plan-detail">
+	<table class="tb">
+		<caption>비교</caption>
+		<colgroup>
+			<col style="width:auto">
+			<col style="width: 50%">
+		</colgroup>
+		<thead>
+			<tr>
+				<th scope="col">5G 유심 (11GB+/통화맘껏)</th>
+				<th scope="col">5G 유심 (200GB+/통화맘껏)</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><strong class="text-bg">11GB</strong> 기본제공 <br class="d-lg-none">소진 시,<br><strong class="text-bg">최대 1Mbps <br class="d-lg-none">무제한</strong></td>
+				<td><strong class="text-bg">200GB</strong> 기본제공 <br class="d-lg-none">소진 시,<br><strong class="text-bg">최대 5Mbps <br class="d-lg-none">무제한</strong></td>			</tr>
+			<tr>
+				<td>무제한</td>
+				<td>무제한</td>
+			</tr>
+			<tr>
+				<td class="text-under"><a href="https://www.sk7mobile.com/shop/mobile/usimList.do?salePlcyCd=0000611657&postTp=1&refer=callingPlanViewcmp" >40,700원</a></td>
+				<td class="text-under"><a href="https://www.sk7mobile.com/prod/data/callingPlanView.do?prodCd=PD00000316&refer=callingPlanViewcmp" >61,600원</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<ul class="lst-dot">
+ <li>5Mbps : 1080p 해상도로 실시간 동영상을 끊김 없이 볼 수 있는 속도</li>
+ <li>1Mbps : 480p 해상도로 실시간 동영상을 끊김 없이 볼 수 있는 속도</li>
+</ul>
+
+
+--><div class="heading-depth2">
+					<h3 class="title text-primary">함께하면 좋은 부가서비스</h3>
+				</div>
+				<div class="swiper-container add-service-swiper swiper-container-horizontal">
+					<div class="swiper-wrapper add-service"><div class="swiper-slide swiper-slide-active" style="width: 272.131px;">
+							<div class="contWrap">
+								<ul class="cont">
+									<li class="badge-wp"><span class="badge1">통화편의</span></li>
+									<li class="item"><strong>콜키퍼</strong></li>
+									
+										<li class="cost"><b class="text-danger">
+								 				월550원</b></li></ul>
+									<a href="/prod/data/addServiceView.do?refCode=P000SRCLKP" class="ads-link">자세히보기</a>
+								</div>
+							</div>
+						<div class="swiper-slide swiper-slide-next" style="width: 272.131px;">
+							<div class="contWrap">
+								<ul class="cont">
+									<li class="badge-wp"><span class="badge1">통화편의</span></li>
+									<li class="item"><strong>통화중대기</strong></li>
+									
+										<li class="cost"><b class="text-danger">무료</b></li>
+							 			</ul>
+									<a href="/prod/data/addServiceView.do?refCode=P000SCALLP" class="ads-link">자세히보기</a>
+								</div>
+							</div>
+						<div class="swiper-slide" style="width: 272.131px;">
+							<div class="contWrap">
+								<ul class="cont">
+									<li class="badge-wp"><span class="badge1">개인정보보호</span></li>
+									<li class="item"><strong>T RING</strong></li>
+									
+										<li class="cost"><b class="text-danger">무료</b></li>
+							 			</ul>
+									<a href="/prod/data/addServiceView.do?refCode=P000STRING" class="ads-link">자세히보기</a>
+								</div>
+							</div>
+						</div>
+				<span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+				<div class="acc-group acc-type1" data-accordion="true">
+					<dl class="acc-item active">
+						<dt class="acc-head">
+							<button class="btn btn-toggle" type="button" role="button" title="닫기">유의사항</button>
+						</dt>
+						<dd class="acc-body" role="region" aria-hidden="false" aria-expanded="true">
+							<div class="acc-content" style="display: block;">
+								<ul class="lst-dot"><ul class="lst-bullet">
+ <li>요금제의 프로모션 할인금액은 변경될 수 있으며 고객님의 개통일을 기준으로 프로모션 할인 금액이 적용됩니다.</li>
+  <li>요금제 변경을 원하시는 기존 SK 세븐모바일 고객님의 경우 [MY&gt;요금제/부가서비스&gt;요금제 조회/변경] 화면을 통해 변경 신청이 가능합니다. 신청일 기준으로 프로모션 할인 금액이 적용되며, 요금제에 따라 위약금이 발생할 수 있습니다. </li>
+ <li>선불, 복지, 청소년 요금제 이용 고객님의 경우 고객센터를 통한 요금제 변경 상담을 부탁드립니다.</li>
+  <li>현재 SK 텔레콤을 이용중이신 고객님들도 '번호이동'으로 가입하셔야 하며, 번호이동 시 기존 통신사의 위약금 사전 확인을 권장드립니다. (번호이동 시 기존 통신사는 자동으로 해지)</li>
+  <li>유심요금제 프로모션 할인 혜택은 해지 전까지 평생 적용되며, 가입 첫달은 일할 할인 계산됩니다. (할인 금액이 포함된 요금은 명세서에서 확인이 가능하며, 실시간 요금 조회에서는 확인 불가)</li>
+  <li>이용 중 해지, 정지, 요금제 변경 시 사용한 기간만큼 프로모션 할인 금액이 적용됩니다. </li>
+  </ul></ul><div class="text-right">
+									<a href="javascript:void(0);" class="text-link" data-toggle="modal" data-target=".modal-planGuide">자세히보기</a>
+								</div></div>
+						</dd>
+					</dl>
+				</div>
+				<div class="btn-wrap item2-1">
+					<span>
+						<a href="javascript:void(0);" class="btn btn-secondary btn-lg" onclick="fnSearchList();">목록</a>
+					</span>
+					<span>
+						<a href="javascript:void(0);" onclick="fnLoginForward('/cust/post/changePlan.do');" class="btn btn-primary btn-lg">요금제 조회/변경</a>
+					</span>
+					<span><a href="/shop/mobile/usimList.do?salePlcyCd=1000055573" class="btn btn-danger btn-lg"><i>요금제 가입하기</i></a></span></div></div>
+
+

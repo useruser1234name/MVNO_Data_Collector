@@ -1,0 +1,126 @@
+https://www.uplusumobile.com/product/pric/usim/pricList?fltrTypeCtgr=LTE
+https://www.uplusumobile.com/product/pric/usim/pricList?fltrTypeCtgr=SPCL
+https://www.uplusumobile.com/product/pric/usim/pricList?fltrTypeCtgr=5G
+https://www.uplusumobile.com/product/pric/phone/pricList?fltrTypeCtgr=LTE
+https://www.uplusumobile.com/product/pric/phone/pricList?fltrTypeCtgr=5G
+https://www.uplusumobile.com/product/pric/phone/pricList?fltrTypeCtgr=SPCL
+
+
+https://www.uplusumobile.com/product/pric/pricDetail?seq=548&upPpnCd=H_DATAPLUS&devKdCd=001
+
+<button type="button" data-hp-ppn-seq="470" data-ppn-cd="LPZ1001674" data-up-ppn-cd="U009" data-dev-kd-cd="003" onclick="$pricComparePopCmm.fnAddCompareWish(this);">
+																	<span>비교하기</span>
+																</button>
+
+https://www.uplusumobile.com/product/pric/pricDetail?seq=470&upPpnCd=U009&devKdCd=003
+
+147개 요금제
+
+
+
+<div class="major">
+                            <div class="detail-header">
+                                <div class="chip-wrap">
+                                    
+
+                                            <img src="/upload/ppn/img/이마트24.png" alt="이마트24">
+                                        
+  
+                                    
+                                </div>
+                                <!--<div class="chip-wrap">
+                                    <span class="chip hotpink">BEST</span>
+                                    <span class="chip mint">상품권 최대 2만원</span>
+                                </div>-->
+                                <h2 class="tit">LTE 스페셜 플러스</h2>
+                                <div class="feature">
+                                    <span class="vol">100GB</span>
+                                    <span class="limit">기본제공</span>
+                                    <span class="supply">기본제공</span>
+                                </div>
+                            </div>
+
+                            <div class="detail-footer">
+		                        <button class="ico-share" id="shareBtn" type="button">공유하기 버튼</button>
+		                        
+		                            <!-- 휴대폰 요금제 -->
+		                            
+		                            <!-- 유심 요금제 -->
+		                            
+				                        <a href="https://www.uplusumobile.com/event-benefit/event/ongoing/11397" class="banner-randombox gtm-tracking-delay" data-gtm-tracking-category="유심 요금제 상세_PC" data-gtm-tracking-action="랜덤박스 신청버튼_PC" data-gtm-tracking-label="랜덤박스 신청버튼">
+				                            <img src="/assets/images/pc/banner/banner-randombox01.png" alt="가입 전 최대 5만원 혜택" class="gtm-tracking-delay" data-gtm-tracking-category="유심 요금제 상세_PC" data-gtm-tracking-action="랜덤박스 신청버튼_PC" data-gtm-tracking-label="랜덤박스 신청버튼">
+				                        </a>
+		                            
+		                            <!-- eSIM 요금제 -->
+		                            
+		                        
+                                <div class="pay-amount">
+                                    
+                                        <span class="origin-pay">46,600원</span>
+                                        <strong class="discount-pay">38,200원</strong>
+                                    
+                                    
+                                    <!--<span class="origin-pay">23,500원</span>
+                                    <strong class="discount-pay">월 9,900원</strong>-->
+                                </div>
+
+                                <div class="box-btn">
+                                    
+                                        <!-- 휴대폰 요금제 -->
+                                        
+                                        <!-- 유심 요금제 -->
+                                        
+                                            <button class="btns h-sm md-ripples ripples-light" id="reg003Btn" type="button" value="USIM/ESIM_LPZ1001674_LTE 스페셜 플러스">가입하기</button>
+                                        
+                                        <!-- eSIM 요금제 -->
+                                        
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+
+<div class="plan-detail-conts acc-conts" aria-hidden="true">
+
+                    <h3 class="m-tt txt-vt">※ LG U+ 인터넷결합 이용가능 요금제<br>※ 매월 이마트24 편의점 혜택 제공! (24개월)</h3>
+
+                    <h3 class="m-tt">1. 제공 혜택</h3>
+                  <ul class="notification">
+                     <li>이마트24 편의점 2천원 금액권</li>
+                     <li>이마트24 편의점 2천원 할인권 (1만원 이상 구입 시)</li>
+                     <li>이마트24 편의점 1천원 할인권 (5천원 이상 구입 시)</li>
+                    </ul>
+
+                    <h3 class="m-tt">2. 제공 기간 : 24개월</h3>
+
+                    <h3 class="m-tt">3. 혜택 유의사항</h3>
+                    <ul class="notification">
+                     <li>본 혜택은 프로모션 혜택으로 조기 종료 또는 변경될 수 있습니다.</li>
+                     <li>본 혜택은 가입 익월 1일 이마트24 App에서 다운로드 가능합니다.</li>
+                     <li>쿠폰 유효기간 : 다운로드 월의 말일까지 (5월 다운로드 시 → 5월 31일까지 사용 가능)</li>
+                     <li>쿠폰은&nbsp;하나의&nbsp;결제&nbsp;건당&nbsp;1장만&nbsp;사용&nbsp;가능합니다.&nbsp;(중복&nbsp;사용&nbsp;불가합니다.)</li>
+                     <li>쿠폰을&nbsp;사용한&nbsp;결제&nbsp;건의&nbsp;경우&nbsp;일부&nbsp;상품만&nbsp;취소는&nbsp;불가합니다.</li>
+                     <li>쿠폰은&nbsp;유효기간&nbsp;이후&nbsp;자동&nbsp;소멸되며,&nbsp;소멸된&nbsp;쿠폰은&nbsp;재발행되지&nbsp;않습니다.</li>
+                     <li>쿠폰은&nbsp;타인에게&nbsp;양도&nbsp;혹은&nbsp;재판매&nbsp;하실&nbsp;수&nbsp;없으며,&nbsp;이로&nbsp;인해&nbsp;발생한&nbsp;불이익은&nbsp;이마트24에서&nbsp;책임지지&nbsp;않습니다.</li>
+                     <li>구독쿠폰&nbsp;할인&nbsp;또는&nbsp;통신사&nbsp;할인&nbsp;적용&nbsp;시,&nbsp;해당&nbsp;할인이&nbsp;적용된&nbsp;최종&nbsp;금액에&nbsp;쿠폰이&nbsp;사용됩니다.</li>
+                     <li>노브랜드&nbsp;상품은&nbsp;쿠폰&nbsp;적용이&nbsp;불가하며,&nbsp;최소구매금액은&nbsp;노브랜드&nbsp;상품을&nbsp;제외한&nbsp;금액&nbsp;기준입니다.</li>
+                     <li>사이먼,&nbsp;주유소,&nbsp;휴게소&nbsp;내&nbsp;입점&nbsp;점포&nbsp;등&nbsp;일부&nbsp;특수 매장&nbsp;및&nbsp;이마트,&nbsp;이마트에브리데이&nbsp;매장을&nbsp;제외한&nbsp;이마트24&nbsp;전&nbsp;매장에서&nbsp;사용&nbsp;가능합니다.</li>
+                    </ul>
+
+
+                    <h3 class="m-tt">U+와이파이</h3>
+                    <ul class="notification">
+                        <li>유플러스 와이파이 공유기가 있는 곳에서 무선 인터넷(Wi-Fi) 이용 가능</li>
+                        <li>휴대폰 정보 등록(확정 기변) 후 이용 가능</li>
+                    </ul>
+                    <h3 class="m-tt">매너콜</h3>
+                    <ul class="notification">
+                        <li>통화 중이거나 휴대폰이 꺼져 있을 때 걸려온 전화 정보를 문자 메시지로 받을 수 있는 서비스</li>
+                    </ul>
+                    <h3 class="m-tt">핫스팟</h3>
+                    <ul class="notification">
+                        <li>데이터 월11GB 별도 제공</li>
+                        <li>모두 사용하면 자동 차단</li>
+                    </ul>
+                </div>
+
