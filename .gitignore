@@ -6,3 +6,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Data files
+*.csv
+*.html
+*.json
+*.jsonl

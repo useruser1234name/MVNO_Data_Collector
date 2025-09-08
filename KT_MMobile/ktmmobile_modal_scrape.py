@@ -1,62 +1,69 @@
 # -*- coding: utf-8 -*-
 """
-KT M모바일 동적 수집기 v2.2 (상단 탭 + 서브탭 + 아코디언 + 모달 전체 저장)
-- 대상: https://www.ktmmobile.com/rate/rateList.do
-
-개정 포인트
-* 상세 모달(#modalProduct)만 수집 (ARS/비교함 등 다른 모달은 즉시 닫기)
-* 플로팅 '요금제 비교함' 등 가리는 UI는 pointer-events 비활성화
-* 현재 보이는 탭패널 안에서만 LTE/5G 서브탭 순회
-* wait_for_function 제거, selector 기반 대기만 사용
+KT M모바일 동적 수집기 — 순차 파이프라인 안정화 버전
+- 단계별 진행: 메인탭 -> 서브탭 -> 아코디언(스캔) -> 아이템 수(스캔) -> 모달 파싱(실행)
+- 메인탭 스코프 명확화(id^="rateListTab"), 서브탭은 메인탭 패널 내부에서만 탐색
+- 탭/아코디언 전환 대기 강화 + 스크롤 펄스 + UI 차단요소 pointer-events:none
+- 행 단위(JSONL/CSV) 즉시 적재 + 재실행 내구성(중복 키 스킵)
 """
 
 import argparse
 import csv
+import hashlib
 import json
 import re
 import time
 from pathlib import Path
+from typing import Optional, Tuple
 
 from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout, Page
+from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout, Page, Locator
 
 DEFAULT_URL = "https://www.ktmmobile.com/rate/rateList.do"
-REQUEST_INTERVAL_SEC = 0.35
-VER = "v2.2"
 
-# -------------------- 유틸 --------------------
+# ---- 튜닝 파라미터 ----
+REQ_DELAY_SEC = 0.5              # 클릭/닫기 매너타임
+PANEL_TIMEOUT_MS = 12000         # 탭/아코디언 준비 대기
+MODAL_TIMEOUT_MS = 12000         # 모달 열림 대기
+SCROLL_PULSES = 3                # 전환 후 스크롤 펄스 횟수
+SCROLL_DELTA = 1200              # 한 번에 스크롤 양
+RETRY_CLICK = 2                  # 클릭 재시도
+RETRY_MODAL = 2                  # 모달 열기 재시도
+
+# ---- 유틸 ----
 def ts() -> str:
     return time.strftime("[%H:%M:%S]")
 
-def norm(s: str | None) -> str | None:
+def norm(s: Optional[str]) -> Optional[str]:
     if not s:
         return None
     return re.sub(r"\s+", " ", s).strip()
-
-def money(s: str | None) -> int | None:
-    if not s:
-        return None
-    m = re.findall(r"\d+", s.replace(",", ""))
-    return int("".join(m)) if m else None
 
 def direct_text(el) -> str:
     if not el:
         return ""
     return "".join(el.find_all(string=True, recursive=False)).strip()
 
+def money(s: Optional[str]) -> Optional[int]:
+    if not s:
+        return None
+    m = re.findall(r"\d+", s.replace(",", ""))
+    return int("".join(m)) if m else None
+
 def safe_filename(name: str, maxlen: int = 90) -> str:
     name = re.sub(r"[\\/:*?\"<>|\s]+", "_", name).strip("_")
     return name[:maxlen] or "item"
 
 def ensure_dirs(base: Path):
-    (base / "screens").mkdir(parents=True, exist_ok=True)
-    (base / "modals").mkdir(parents=True, exist_ok=True)
     (base / "html").mkdir(parents=True, exist_ok=True)
     (base / "logs").mkdir(parents=True, exist_ok=True)
 
-# -------------------- Mbps 추출 --------------------
-def extract_mbps_lines_from_modal(soup: BeautifulSoup) -> tuple[str | None, str | None]:
-    """(상단요약의 Mbps 라인들 | '데이터 이용 안내' 섹션의 Mbps 라인들)"""
+def mk_key(*parts: str) -> str:
+    raw = "||".join([p or "" for p in parts])
+    return hashlib.md5(raw.encode("utf-8")).hexdigest()
+
+# ---- 파싱(Modal) ----
+def extract_mbps_lines_from_modal(soup: BeautifulSoup) -> Tuple[Optional[str], Optional[str]]:
     toplist_hits = []
     for ul in soup.select(
         "ul.product-summary, ul.notification.free, "
@@ -94,252 +101,39 @@ def extract_mbps_lines_from_modal(soup: BeautifulSoup) -> tuple[str | None, str 
 
 def parse_modal_fields(modal_html: str) -> dict:
     soup = BeautifulSoup(modal_html, "lxml")
+    # 제목 후보
     title = None
-    t = soup.select_one("#modalProductTitle, .c-modal__title")
-    if t:
-        title = norm(t.get_text(strip=True))
-
+    for sel in ["#modalProductTitle", ".c-modal__title", ".product-detail__title", ".c-modal .title", "h1,h2"]:
+        el = soup.select_one(sel)
+        if el:
+            title = norm(el.get_text(" ", strip=True))
+            if title:
+                break
+    # 가격 후보
     price_text = None
-    p = soup.select_one(".product-detail__price, .product-detail__price-wrap, .u-co-red, .u-co-black")
-    if p:
-        price_text = norm(p.get_text(" ", strip=True))
+    for sel in [".product-detail__price", ".product-detail__price-wrap", ".u-co-red", ".u-co-black", ".price"]:
+        el = soup.select_one(sel)
+        if el:
+            price_text = norm(el.get_text(" ", strip=True))
+            if price_text:
+                break
     price_num = money(price_text)
     speed_top, speed_guide = extract_mbps_lines_from_modal(soup)
-
     return {
-        "modal_title": title,
-        "modal_price_text": price_text,
-        "modal_price": price_num,
-        "speed_toplist_modal": speed_top,
-        "speed_dataguide_modal": speed_guide,
+        "modal_title": title or "",
+        "modal_price_text": price_text or "",
+        "modal_price": price_num if price_num is not None else "",
+        "speed_toplist_modal": speed_top or "",
+        "speed_dataguide_modal": speed_guide or "",
     }
 
-def parse_modal_all(modal_html: str) -> dict:
-    """모달의 광범위한 정보를 JSON 문자열 컬럼들로 구성."""
-    soup = BeautifulSoup(modal_html, "lxml")
-    root = soup.select_one(".c-modal__content, .c-modal__body, .c-modal__dialog") or soup
-
-    def jdump(obj) -> str:
-        try:
-            return json.dumps(obj, ensure_ascii=False, separators=(",", ":"))
-        except Exception:
-            return ""
-
-    def t(el) -> str:
-        try:
-            return norm(" ".join(el.stripped_strings)) or ""
-        except Exception:
-            return ""
-
-    # 1) 전체 텍스트
-    modal_text_all = t(root)
-
-    # 2) 섹션(헤딩별 블록) 추출
-    sections = []
-    try:
-        headings = root.select("h1, h2, h3, h4, h5, h6")
-        for h in headings:
-            title = h.get_text(strip=True)
-            body_parts = []
-            for sib in h.next_siblings:
-                # 다음 헤딩 만나면 종료
-                if getattr(sib, "name", None) in {"h1","h2","h3","h4","h5","h6"}:
-                    break
-                if getattr(sib, "name", None) in {"script", "style"}:
-                    continue
-                body_parts.append(t(sib) if hasattr(sib, "stripped_strings") else norm(str(sib)))
-            body = norm(" ".join([x for x in body_parts if x])) or ""
-            if title or body:
-                sections.append({"title": title, "body": body})
-    except Exception:
-        pass
-
-    # 3) DL 목록들
-    dl_blocks = []
-    try:
-        for dl in root.select("dl"):
-            pairs = []
-            dts = dl.find_all("dt")
-            dds = dl.find_all("dd")
-            # dt/dd 페어링(개수가 다르면 가능한 범위만)
-            m = min(len(dts), len(dds))
-            for i in range(m):
-                k = t(dts[i])
-                v = t(dds[i])
-                if k or v:
-                    pairs.append({"key": k, "value": v})
-            if pairs:
-                dl_blocks.append(pairs)
-    except Exception:
-        pass
-
-    # 4) 표
-    tables = []
-    try:
-        for tbl in root.select("table"):
-            headers = []
-            head = tbl.find("thead")
-            if head:
-                ths = head.find_all(["th", "td"]) or []
-                headers = [t(c) for c in ths]
-            if not headers:
-                first_tr = tbl.find("tr")
-                if first_tr:
-                    headers = [t(c) for c in first_tr.find_all(["th", "td"]) or []]
-            rows = []
-            for tr in tbl.find_all("tr"):
-                cells = tr.find_all(["th", "td"]) or []
-                row = [t(c) for c in cells]
-                if any(row):
-                    rows.append(row)
-            if rows:
-                tables.append({"headers": headers, "rows": rows})
-    except Exception:
-        pass
-
-    # 5) 링크
-    links = []
-    try:
-        for a in root.select("a[href]"):
-            href = a.get("href")
-            txt = t(a)
-            if href or txt:
-                links.append({"text": txt, "href": href})
-    except Exception:
-        pass
-
-    # 6) 불릿/번호 목록
-    bullets = []
-    try:
-        for ul in root.select("ul, ol"):
-            items = []
-            for li in ul.find_all("li"):
-                items.append(t(li))
-            if any(items):
-                bullets.append(items)
-    except Exception:
-        pass
-
-    return {
-        "modal_text_all": modal_text_all,
-        "modal_sections_json": jdump(sections),
-        "modal_dl_json": jdump(dl_blocks),
-        "modal_tables_json": jdump(tables),
-        "modal_links_json": jdump(links),
-        "modal_bullets_json": jdump(bullets),
-    }
-
-# -------------------- 공용 액션 --------------------
-def log_requestfailed(r, log_path: Path | None = None):
-    try:
-        # playwright 1.45+ : r.failure()가 문자열일 수 있음
-        fail = r.failure
-        msg = getattr(fail, "error_text", "") if hasattr(fail, "error_text") else (fail or "")
-        line = f"{ts()} [requestfailed] {r.method} {r.url} -> {msg}"
-        print(line)
-        if log_path:
-            try:
-                log_path.write_text((log_path.read_text(encoding="utf-8") if log_path.exists() else "") + line + "\n", encoding="utf-8")
-            except Exception:
-                pass
-    except Exception:
-        line = f"{ts()} [requestfailed] {getattr(r,'method','?')} {getattr(r,'url','?')}"
-        print(line)
-        if log_path:
-            try:
-                log_path.write_text((log_path.read_text(encoding="utf-8") if log_path.exists() else "") + line + "\n", encoding="utf-8")
-            except Exception:
-                pass
-
-def append_log(log_path: Path, message: str):
-    try:
-        with log_path.open("a", encoding="utf-8") as f:
-            f.write(message + "\n")
-    except Exception:
-        pass
-
-def make_console_logger(log_path: Path):
-    def _logger(m):
-        line = f"{ts()} [console:{m.type}] {m.text}"
-        print(line)
-        append_log(log_path, line)
-    return _logger
-
-def make_pageerror_logger(log_path: Path):
-    def _logger(e):
-        line = f"{ts()} [pageerror] {e}"
-        print(line)
-        append_log(log_path, line)
-    return _logger
-
-def make_requestfailed_logger(log_path: Path):
-    return lambda r: log_requestfailed(r, log_path)
-
-def make_response_logger(log_path: Path):
-    def _logger(resp):
-        try:
-            status = resp.status
-            if status >= 400:
-                line = f"{ts()} [response:{status}] {resp.request.method} {resp.url}"
-                print(line)
-                append_log(log_path, line)
-        except Exception:
-            pass
-    return _logger
-
-def close_all_modals(page: Page, timeout_ms: int = 2500):
-    """열려있는 모달(ARIA dialog 및 .c-modal)을 닫는다."""
-    for _ in range(3):
-        active_any = page.locator("dialog, [role='dialog'], .c-modal.is-active")
-        # 모두 숨겨졌으면 종료
-        try:
-            visible_count = 0
-            for i in range(min(8, active_any.count())):
-                try:
-                    if active_any.nth(i).is_visible():
-                        visible_count += 1
-                except Exception:
-                    pass
-            if visible_count == 0:
-                break
-        except Exception:
-            pass
-
-        # 닫기 버튼 먼저 (dialog와 .c-modal 모두 대상)
-        for sel in [
-            "dialog [data-dialog-close]",
-            "dialog .c-modal__close",
-            "dialog button:has-text('닫기')",
-            "dialog button:has-text('팝업닫기')",
-            ".c-modal.is-active [data-dialog-close]",
-            ".c-modal.is-active .c-modal__close",
-            ".c-modal.is-active button:has-text('닫기')",
-            ".c-modal.is-active button:has-text('팝업닫기')",
-        ]:
-            btn = page.locator(sel)
-            if btn.count() > 0:
-                try:
-                    btn.first.click()
-                    page.wait_for_timeout(120)
-                except Exception:
-                    pass
-        # ESC 키
-        try:
-            page.keyboard.press("Escape")
-        except Exception:
-            pass
-        # 사라질 때까지 조금 기다림
-        try:
-            page.locator("dialog, [role='dialog'], .c-modal.is-active").first.wait_for(state="hidden", timeout=timeout_ms)
-        except Exception:
-            pass
-
+# ---- 브라우저 보조 ----
 def disable_blocking_ui(page: Page):
-    """클릭을 가리는 비교함/플로팅 UI를 일시적으로 무력화"""
     js = """
     for (const sel of [
       '#pullProductCompare', '.rate-compare__floating', '.floating-compare',
-      'button:has-text("요금제 비교함")', '.btn-compare', '.compare'
+      'button:has-text("요금제 비교함")', '.btn-compare', '.compare',
+      '.ly-page--title', 'header', '#header'
     ]) {
       try {
         const el = document.querySelector(sel);
@@ -352,101 +146,497 @@ def disable_blocking_ui(page: Page):
     except Exception:
         pass
 
-def click_and_wait_modal(page: Page, link_locator, target: str, open_timeout: int = 14000):
-    """카드의 상세 트리거를 클릭하고 실제 떠 있는 모달(dialog/.c-modal)을 대기."""
-    disable_blocking_ui(page)
-    # 겹침 방지: 살짝 위로
-    try:
-        link_locator.scroll_into_view_if_needed()
-    except Exception:
-        pass
-    page.mouse.wheel(0, -200)
-    page.wait_for_timeout(100)
-    link_locator.click(force=True)
-
-    # 1차: 명시적 target(.is-active) 시도
-    try:
-        page.locator(f"{target}.is-active").wait_for(state="visible", timeout=int(open_timeout * 0.5))
-        return page.locator(target)
-    except Exception:
-        pass
-
-    # 2차: target 내부 컨텐츠 시도
-    try:
-        page.locator(f"{target} .c-modal__dialog, {target} .c-modal__content, {target} [role='document']").first.wait_for(
-            state="visible", timeout=int(open_timeout * 0.6)
-        )
-        return page.locator(target)
-    except Exception:
-        pass
-
-    # 3차: 실제로 보이는 dialog/.c-modal 감지
-    for sel in [
-        "dialog[open]",
-        "[role='dialog']:not([aria-hidden='true'])",
-        ".c-modal.is-active",
-        "dialog",
-        "[role='dialog']",
-    ]:
+def scroll_pulse(page: Page, pulses: int = SCROLL_PULSES, delta: int = SCROLL_DELTA):
+    for _ in range(pulses):
         try:
-            loc = page.locator(sel)
-            # 가시성 판단
-            for i in range(min(6, loc.count())):
-                el = loc.nth(i)
-                try:
-                    el.wait_for(state="visible", timeout=int(open_timeout * 0.6))
-                    return el
-                except Exception:
+            page.mouse.wheel(0, delta)
+            page.wait_for_timeout(120)
+            page.mouse.wheel(0, -delta)
+            page.wait_for_timeout(120)
+        except Exception:
+            break
+
+def click_safely(btn: Locator):
+    # 가려짐 방지 + 재시도 + JS 클릭 폴백
+    for attempt in range(1, RETRY_CLICK + 2):
+        try:
+            try:
+                btn.scroll_into_view_if_needed()
+            except Exception:
+                pass
+            btn.click(timeout=3000)
+            return True
+        except Exception:
+            # JS click fallback
+            try:
+                btn.evaluate("el => el.click()")
+                return True
+            except Exception:
+                if attempt <= RETRY_CLICK:
+                    time.sleep(0.25)
                     continue
+                return False
+
+# ---- 탭/패널 탐색 ----
+def main_tabs(page: Page) -> list[dict]:
+    # 메인탭만: id^="rateListTab"
+    tabs = page.locator('button.c-tabs__button[id^="rateListTab"]')
+    out = []
+    n = tabs.count()
+    for i in range(n):
+        b = tabs.nth(i)
+        try:
+            text = b.inner_text().strip()
+            # 숨김 텍스트 제거
+            text = text.replace("현재 선택됨", "").strip()
+            aria_controls = b.get_attribute("aria-controls") or ""
+            out.append({"name": text, "locator": b, "panel_id": aria_controls})
         except Exception:
             continue
-    # 실패 시 target 반환(후속 로직에서 inner_html 시도)
-    return page.locator(target)
+    return out
 
-def expand_modal_content(page: Page, modal_el):
-    # 아코디언 등 펼칠 수 있는 컨트롤 시도
+def subtabs_in_main_panel(page: Page, panel_id: str) -> list[dict]:
+    if not panel_id:
+        return []
+    panel = page.locator(f'#{panel_id}')
+    # 해당 패널 내부의 서브탭만
+    subs = panel.locator('button.c-tabs__button[role="tab"]')
+    out = []
+    n = subs.count()
+    for i in range(n):
+        b = subs.nth(i)
+        try:
+            text = b.inner_text().strip().replace("현재 선택됨", "").strip()
+            aria_controls = b.get_attribute("aria-controls") or ""
+            out.append({"name": text, "locator": b, "panel_id": aria_controls})
+        except Exception:
+            pass
+    # 중복 제거(텍스트 기준)
+    uniq = []
+    seen = set()
+    for x in out:
+        if x["name"] and x["name"] not in seen:
+            uniq.append(x); seen.add(x["name"])
+    return uniq
+
+def wait_panel_ready(scope: Locator) -> bool:
+    # 리스트 컨테이너 또는 아코디언/카드 중 하나라도 준비되면 OK
     try:
-        for _ in range(2):
-            acc = modal_el.locator(".c-accordion__button")
-            for i in range(acc.count()):
-                try:
-                    btn = acc.nth(i)
-                    aria = (btn.get_attribute("aria-expanded") or "").lower()
-                    if aria != "true":
-                        btn.click()
-                        page.wait_for_timeout(100)
-                except Exception:
-                    pass
+        scope.locator("ul.rate-content__list").first.wait_for(state="visible", timeout=PANEL_TIMEOUT_MS)
+        return True
     except Exception:
         pass
-    # 스크롤로 지연 로드 유도
     try:
-        content = modal_el.locator(".c-modal__content, .c-modal__body, .c-modal__dialog").first
-        if content.count() > 0:
+        scope.locator(".runtime-data-insert.c-accordion__button").first.wait_for(state="visible", timeout=PANEL_TIMEOUT_MS)
+        return True
+    except Exception:
+        return False
+
+def open_main_tab(page: Page, tab: dict) -> bool:
+    disable_blocking_ui(page)
+    ok = click_safely(tab["locator"])
+    page.wait_for_timeout(int(REQ_DELAY_SEC * 1000))
+    if not ok:
+        return False
+    # 활성 패널 준비 대기
+    panel = page.locator(f'#{tab["panel_id"]}') if tab["panel_id"] else page.locator("[role=tabpanel]").first
+    scroll_pulse(page)
+    ready = wait_panel_ready(panel)
+    return ready
+
+def open_subtab(page: Page, main_panel_id: str, subtab: dict) -> Tuple[bool, Locator]:
+    disable_blocking_ui(page)
+    ok = click_safely(subtab["locator"])
+    page.wait_for_timeout(int(REQ_DELAY_SEC * 1000))
+    panel = page.locator(f'#{subtab["panel_id"]}') if subtab["panel_id"] else page.locator(f'#{main_panel_id}')
+    scroll_pulse(page)
+    ready = wait_panel_ready(panel)
+    return ready and ok, panel
+
+# ---- 아코디언/아이템/모달 ----
+def accordion_headers(panel: Locator) -> list[dict]:
+    headers = panel.locator(".runtime-data-insert.c-accordion__button")
+    out = []
+    n = headers.count()
+    for i in range(n):
+        h = headers.nth(i)
+        try:
+            h_text = ""
+            hidden = h.locator(".c-hidden")
+            if hidden.count():
+                h_text = hidden.first.inner_text().strip()
+            if not h_text:
+                h_text = h.inner_text().strip()
+            h_text = h_text.replace("현재 선택됨", "").strip()
+            acc_id = h.get_attribute("aria-controls") or ""
+            out.append({"name": h_text, "locator": h, "content_id": acc_id})
+        except Exception:
+            pass
+    return out
+
+def open_accordion(panel: Locator, header: dict) -> Optional[Locator]:
+    # 항상 차단 UI 먼저 끄기
+    try:
+        disable_blocking_ui(panel.page)
+    except Exception:
+        pass
+
+    h = header["locator"]
+    cid = header.get("content_id") or ""
+
+    # 컨텐트 패널 우선 식별 (aria-controls 우선, 없으면 형제 패널로 보강)
+    cont = panel.locator(f"#{cid}") if cid else None
+    if not cont or cont.count() == 0:
+        # header가 속한 아코디언 아이템의 패널을 직접 찾기
+        cont = h.locator(
+            "xpath=ancestor::li[contains(@class,'c-accordion__item')]"
+            "//div[contains(@class,'c-accordion__panel')]"
+        ).first
+
+    # 뷰포트 중앙으로 가져와 클릭 준비
+    try:
+        h.evaluate("el => el.scrollIntoView({block:'center'})")
+    except Exception:
+        try: h.scroll_into_view_if_needed()
+        except Exception: pass
+
+    # 이미 열려 있나?
+    def is_expanded() -> bool:
+        try:
+            ae = (h.get_attribute("aria-expanded") or "").lower() == "true"
+        except Exception:
+            ae = False
+        if cont and cont.count() > 0:
             try:
-                content.evaluate("el => { el.scrollTop = 0; el.scrollTo(0, el.scrollHeight); }")
+                return ae or cont.evaluate(
+                    """el => el.classList?.contains('expanded') || (
+                           getComputedStyle(el).display !== 'none' && el.offsetHeight > 0
+                       )"""
+                )
             except Exception:
-                for _ in range(6):
-                    page.mouse.wheel(0, 600)
-                    page.wait_for_timeout(60)
+                return ae
+        return ae
+
+    # 최대 3회 시도: 클릭 -> 확장 대기 -> 아이템 대기 폴백
+    for attempt in range(3):
+        if not is_expanded():
+            if not click_safely(h):
+                time.sleep(0.25)
+                continue
+            time.sleep(REQ_DELAY_SEC)
+
+        # 확장 상태 우선 대기
+        ok = False
+        try:
+            if cont and cont.count() > 0:
+                panel.page.wait_for_function(
+                    """el => el && (
+                           el.classList?.contains('expanded') ||
+                           (getComputedStyle(el).display !== 'none' && el.offsetHeight > 0)
+                       )""",
+                    arg=cont.element_handle(),
+                    timeout=PANEL_TIMEOUT_MS
+                )
+                ok = True
+        except Exception:
+            ok = False
+
+        # 아이템 등장 대기(폴백)
+        if not ok:
+            try:
+                (cont if cont and cont.count() > 0 else panel) \
+                    .locator("li.rate-content__item").first \
+                    .wait_for(state="visible", timeout=4000)
+                ok = True
+            except Exception:
+                ok = False
+
+        if ok:
+            return cont if cont and cont.count() > 0 else panel
+
+        # 마지막 폴백: 스크롤 펄스 후 다시 시도
+        try:
+            panel.page.mouse.wheel(0, 600)
+            panel.page.wait_for_timeout(120)
+            panel.page.mouse.wheel(0, -400)
+            panel.page.wait_for_timeout(120)
+        except Exception:
+            pass
+
+    return None
+
+def items_in_accordion(content: Locator) -> list[Locator]:
+    li = content.locator("li.rate-content__item")
+    c = li.count()
+    return [li.nth(i) for i in range(c)]
+
+def open_modal_from_item(page: Page, item: Locator) -> Tuple[Optional[Locator], Optional[str]]:
+    # 트리거 후보
+    triggers = [
+        "a[data-dialog-target*='modal'], a[data-dialog-trigger*='modal']",
+        "button[data-dialog-target*='modal'], button[data-dialog-trigger*='modal']",
+        "a[href*='modal'], button:has(i.c-icon--information)"
+    ]
+    trigger = None
+    for sel in triggers:
+        loc = item.locator(sel)
+        if loc.count() > 0:
+            trigger = loc.first
+            break
+    if not trigger:
+        return None, None
+
+    # 클릭 + 모달 대기
+    for attempt in range(1, RETRY_MODAL + 2):
+        disable_blocking_ui(page)
+        if not click_safely(trigger):
+            if attempt <= RETRY_MODAL:
+                time.sleep(0.25); continue
+            return None, None
+        # 모달 대기
+        try:
+            modal = page.locator(".c-modal.is-active").first
+            modal.wait_for(state="visible", timeout=MODAL_TIMEOUT_MS)
+            # 모달 id
+            mid = ""
+            try:
+                mid = modal.get_attribute("id") or ""
+            except Exception:
+                pass
+            return modal, mid
+        except PWTimeout:
+            if attempt <= RETRY_MODAL:
+                time.sleep(0.3)
+                continue
+            return None, None
+
+def modal_html(modal: Locator) -> str:
+    try:
+        content = modal.locator(".c-modal__content")
+        if content.count() > 0:
+            return content.inner_html()
+        return modal.inner_html()
+    except Exception:
+        try:
+            return modal.inner_html()
+        except Exception:
+            return ""
+
+def close_modal(page: Page):
+    # 닫기 버튼 우선
+    for sel in ["[data-dialog-close]", ".c-modal__close", "button:has-text('닫기')"]:
+        btn = page.locator(f".c-modal.is-active {sel}").first
+        if btn.count() > 0:
+            try:
+                btn.click()
+                break
+            except Exception:
+                pass
+    # ESC 폴백
+    try:
+        page.keyboard.press("Escape")
     except Exception:
         pass
+    # 사라질 때까지 잠깐 대기
+    try:
+        page.locator(".c-modal.is-active").first.wait_for(state="hidden", timeout=3000)
+    except Exception:
+        pass
+    time.sleep(REQ_DELAY_SEC)
 
-# -------------------- 크롤링 본체 --------------------
-def run(url: str, headless: bool, slowmo: int, outdir: Path, max_per_tab: int | None, trace: bool):
-    ensure_dirs(outdir)
-    out_csv = outdir / "ktmmobile_modal_data.csv"
-    log_file = outdir / "logs" / "playwright_activity.log"
-    if not out_csv.exists():
-        with out_csv.open("w", encoding="utf-8", newline="") as f:
-            w = csv.writer(f)
+# ---- 적재기(JSONL/CSV) ----
+class RowStore:
+    def __init__(self, outdir: Path):
+        self.outdir = outdir
+        ensure_dirs(outdir)
+        self.jsonl = outdir / "ktmmodal_rows.jsonl"
+        self.csvf = outdir / "ktmmodal_rows.csv"
+        self.seen = set()
+        # 기존 로드
+        if self.jsonl.exists():
+            try:
+                with self.jsonl.open("r", encoding="utf-8") as f:
+                    for line in f:
+                        try:
+                            obj = json.loads(line)
+                            if "key" in obj:
+                                self.seen.add(obj["key"])
+                        except Exception:
+                            continue
+                print(f"{ts()} [INFO] 기존 JSONL 로드: {len(self.seen)} keys")
+            except Exception:
+                print(f"{ts()} [WARN] JSONL 로드 실패")
+        # CSV 헤더
+        if not self.csvf.exists():
+            with self.csvf.open("w", encoding="utf-8", newline="") as f:
+                w = csv.writer(f)
+                w.writerow([
+                    "site","main_tab","sub_tab","accordion","card_index","list_title",
+                    "modal_id","modal_title","modal_price_text","modal_price",
+                    "speed_toplist_modal","speed_dataguide_modal",
+                    "modal_html_path","ts","key"
+                ])
+
+    def write_row(self, row: dict):
+        key = row["key"]
+        if key in self.seen:
+            return
+        # JSONL
+        with self.jsonl.open("a", encoding="utf-8") as jf:
+            jf.write(json.dumps(row, ensure_ascii=False) + "\n")
+        # CSV
+        with self.csvf.open("a", encoding="utf-8", newline="") as cf:
+            w = csv.writer(cf)
             w.writerow([
-                "site","tab_name","subtab_name","card_index","list_title",
-                "modal_title","modal_price_text","modal_price",
-                "speed_toplist_modal","speed_dataguide_modal",
-                "modal_html_path","modal_png_path",
-                "modal_text_all","modal_sections_json","modal_dl_json","modal_tables_json","modal_links_json","modal_bullets_json"
+                row.get("site",""), row.get("main_tab",""), row.get("sub_tab",""),
+                row.get("accordion",""), row.get("card_index",""), row.get("list_title",""),
+                row.get("modal_id",""), row.get("modal_title",""),
+                row.get("modal_price_text",""), row.get("modal_price",""),
+                row.get("speed_toplist_modal",""), row.get("speed_dataguide_modal",""),
+                row.get("modal_html_path",""), row.get("ts",""), row.get("key","")
             ])
+        self.seen.add(key)
+
+# ---- 스캔(인덱스) & 파싱(실행) ----
+def scan_accordion_index(page: Page, main_name: str, sub_name: str, panel: Locator) -> list[dict]:
+    """
+    현재 메인/서브탭 패널 안에서 아코디언 헤더를 순회하며
+    [header_id, content_id, name, item_count]만 수집해서 리턴.
+    """
+    accs = accordion_headers(panel)
+    print(f"{ts()}   [SCAN] {main_name} > {sub_name} : 아코디언 {len(accs)}개")
+
+    index: list[dict] = []
+    for acc in accs:
+        acc_name = acc["name"]
+        cont = open_accordion(panel, acc)
+        if not cont:
+            print(f"{ts()}     [SCAN-SKIP] 아코디언 열기 실패: {acc_name}")
+            continue
+
+        items = items_in_accordion(cont)
+        n_items = len(items)
+        print(f"{ts()}     [SCAN] [{acc_name}] 카드 {n_items}개")
+
+        # 식별자(헤더 id, 컨텐트 id) 저장 → 2페이즈에서 재탐색에 사용
+        header_id = ""
+        try:
+            header_id = acc["locator"].get_attribute("id") or ""
+        except Exception:
+            pass
+        index.append({
+            "main": main_name,
+            "sub": sub_name,
+            "accordion": acc_name,
+            "header_id": header_id,
+            "content_id": acc.get("content_id") or "",
+            "count": n_items,
+        })
+
+    return index
+
+def parse_from_index(page: Page, panel: Locator, index: list[dict],
+                     store: "RowStore", max_per_tab: Optional[int]):
+    """
+    scan_accordion_index()에서 받은 구조를 바탕으로
+    각 아코디언을 재탐색 → 아이템 모달 파싱.
+    """
+    for entry in index:
+        main_name = entry["main"]
+        sub_name  = entry["sub"]
+        acc_name  = entry["accordion"]
+        header_id = entry.get("header_id") or ""
+        content_id = entry.get("content_id") or ""
+        target_count = entry.get("count", 0)
+
+        # 헤더 재탐색(우선 id → 없으면 텍스트 매칭)
+        if header_id:
+            h = panel.locator(f"#{header_id}")
+            if h.count() == 0:
+                h = panel.locator(".runtime-data-insert.c-accordion__button").filter(has_text=acc_name).first
+        else:
+            h = panel.locator(".runtime-data-insert.c-accordion__button").filter(has_text=acc_name).first
+
+        if h.count() == 0:
+            print(f"{ts()}     [SKIP] 헤더 재탐색 실패: {acc_name}")
+            continue
+
+        acc = {"name": acc_name, "locator": h, "content_id": content_id}
+        cont = open_accordion(panel, acc)
+        if not cont:
+            print(f"{ts()}     [SKIP] 아코디언 열기 실패(2페이즈): {acc_name}")
+            continue
+
+        items = items_in_accordion(cont)
+        n_items = len(items)
+        if n_items == 0:
+            print(f"{ts()}     - [{acc_name}] 카드 0개 (2페이즈)")
+            continue
+
+        # 스캔 결과와 다르면 로그만 — DOM 변동에 대응
+        if target_count and target_count != n_items:
+            print(f"{ts()}       [WARN] 스캔:{target_count} ↔ 재계산:{n_items} (변동 감지)")
+
+        take_n = n_items if not max_per_tab else min(n_items, max_per_tab)
+        print(f"{ts()}     - [{acc_name}] 모달 파싱 대상 {take_n}/{n_items}개")
+
+        for idx in range(take_n):
+            item = items[idx]
+            list_title = ""
+            try:
+                ttl = item.locator(".rate-info__title, .rate-content__title, .title").first
+                if ttl.count() > 0:
+                    list_title = ttl.inner_text().strip()
+            except Exception:
+                pass
+
+            modal, mid = open_modal_from_item(page, item)
+            if not modal:
+                print(f"{ts()}         [SKIP] 모달 실패: {main_name} > {sub_name} > {acc_name} #{idx+1}")
+                continue
+
+            html = modal_html(modal)
+            fields = parse_modal_fields(html)
+
+            # HTML 저장
+            fname = f"{safe_filename(main_name)}__{safe_filename(sub_name)}__{safe_filename(acc_name)}__{idx+1:03d}.html"
+            fpath = Path(store.outdir) / "html" / fname
+            try:
+                fpath.write_text(html, encoding="utf-8")
+            except Exception:
+                fpath = Path(store.outdir) / "html" / (safe_filename(fname) + f"_{int(time.time())}.html")
+                fpath.write_text(html, encoding="utf-8")
+
+            # 행 구성 + 즉시 적재
+            row = {
+                "site": "ktmmobile",
+                "main_tab": main_name,
+                "sub_tab": sub_name,
+                "accordion": acc_name,
+                "card_index": idx + 1,
+                "list_title": list_title,
+                "modal_id": mid or "",
+                "modal_title": fields["modal_title"],
+                "modal_price_text": fields["modal_price_text"],
+                "modal_price": fields["modal_price"],
+                "speed_toplist_modal": fields["speed_toplist_modal"],
+                "speed_dataguide_modal": fields["speed_dataguide_modal"],
+                "modal_html_path": str(fpath),
+                "ts": time.strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            row["key"] = mk_key(
+                row["site"], row["main_tab"], row["sub_tab"],
+                row["accordion"], str(row["card_index"]),
+                row["modal_title"], str(row["modal_price"])
+            )
+            store.write_row(row)
+            print(f"{ts()}         [OK] 저장: {main_name} > {sub_name} > {acc_name} #{idx+1}")
+
+            close_modal(page)  # 매너타임 포함
+
+# ---- 파이프라인 ----
+def run(url: str, headless: bool, slowmo: int, outdir: Path, max_per_tab: Optional[int], trace: bool):
+    store = RowStore(outdir)
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=headless, slow_mo=slowmo)
@@ -457,267 +647,91 @@ def run(url: str, headless: bool, slowmo: int, outdir: Path, max_per_tab: int | 
                         "Chrome/126.0.0.0 Safari/537.36"),
             accept_downloads=False,
         )
-
         if trace:
-            ctx.tracing.start(screenshots=True, snapshots=True, sources=True)
+            ctx.tracing.start(screenshots=False, snapshots=True, sources=True)
 
         page = ctx.new_page()
-        page.on("console", make_console_logger(log_file))
-        page.on("pageerror", make_pageerror_logger(log_file))
-        page.on("requestfailed", make_requestfailed_logger(log_file))
-        page.on("response", make_response_logger(log_file))
+        page.on("pageerror", lambda e: print(f"{ts()} [pageerror] {e}"))
 
-        print(f"{ts()} [VER] ktmmobile_modal_scrape {VER}")
         print(f"{ts()} [INFO] 이동: {url}")
         page.goto(url, wait_until="domcontentloaded", timeout=70000)
-        # 초기 로딩 후 약간의 유예 + 스샷
-        try:
-            page.wait_for_selector("li.rate-content__item", timeout=15000)
-        except Exception:
-            pass
-        page.screenshot(path=str(outdir / "screens" / "00_loaded.png"))
+        page.wait_for_timeout(800)
 
-        # 상단(큰) 탭 후보를 텍스트로 확정
-        top_targets = ["유심/eSIM 요금제", "제휴 요금제", "휴대폰 요금제"]
-        found_top = []
-        for t in top_targets:
-            if page.locator("button.c-tabs__button", has_text=t).count() > 0:
-                found_top.append(t)
-        if not found_top:
-            # 혹시 줄바꿈/공백 등으로 매칭 실패할 경우 모든 버튼에서 유사 텍스트 추출
-            btns = page.locator("button.c-tabs__button")
-            for i in range(btns.count()):
-                try:
-                    txt = btns.nth(i).inner_text().strip()
-                    if any(key in txt for key in ["유심/eSIM", "제휴 요금제", "휴대폰 요금제"]):
-                        if txt not in found_top:
-                            found_top.append(txt)
-                except Exception:
-                    pass
-        if not found_top:
-            found_top = top_targets
+        # 메인탭 수집
+        tabs = main_tabs(page)
+        names = [t["name"] for t in tabs]
+        print(f"{ts()} [TABS] 메인탭: {names if names else '없음'}")
 
-        print(f"{ts()} [INFO] 탐색 탭: {found_top}")
-
-        def iterate_cards(tab_name: str, subtab_name: str | None):
-            # 아코디언 전부 펼치기
-            for _ in range(2):  # 2회 패스(첫 클릭으로 DOM이 추가되는 경우)
-                acc = page.locator(".c-accordion__button")
-                for i in range(acc.count()):
-                    try:
-                        btn = acc.nth(i)
-                        aria = (btn.get_attribute("aria-expanded") or "").lower()
-                        if aria != "true":
-                            btn.click()
-                            page.wait_for_timeout(120)
-                    except Exception:
-                        pass
-
-            # 더보기/무한로딩 시도
-            for _ in range(24):
-                clicked = False
-                for sel in [".c-pagination__more", ".btn-more", "button:has-text('더보기')"]:
-                    btn = page.locator(sel).first
-                    if btn.count() > 0 and btn.is_enabled():
-                        try:
-                            btn.scroll_into_view_if_needed()
-                            btn.click()
-                            page.wait_for_timeout(450)
-                            clicked = True
-                        except Exception:
-                            pass
-                if not clicked:
-                    break
-
-            # 늦게 로드되는 카드까지 노출
-            for _ in range(12):
-                page.mouse.wheel(0, 2000)
-                page.wait_for_timeout(120)
-
-            cards = page.locator("li.rate-content__item")
-            n = cards.count()
-            print(f"{ts()} [INFO] 카드 개수: {n}")
-            take_n = n if not max_per_tab else min(n, max_per_tab)
-
-            for i in range(take_n):
-                print(f"{ts()}   - 카드 #{i+1}/{take_n}")
-                card = cards.nth(i)
-
-                # 리스트 타이틀
-                list_title = None
-                try:
-                    list_title = norm(card.locator(".rate-info__title, .rate-content__title, .title").first.inner_text())
-                except Exception:
-                    pass
-
-                # 상세 모달 트리거(오직 modalProduct)
-                triggers = []
-                for sel in [
-                    "a[data-dialog-target*='modalProduct']",
-                    "a[data-dialog-trigger*='modalProduct']",
-                    "button[data-dialog-target*='modalProduct']",
-                    "button[data-dialog-trigger*='modalProduct']",
-                ]:
-                    loc = card.locator(sel)
-                    if loc.count() > 0:
-                        triggers.append(loc.first)
-
-                if not triggers:
-                    print(f"{ts()}     [SKIP] 상세 모달 트리거 없음(modalProduct)")
+        for mt in tabs:
+            main_name = mt["name"]
+            print(f"\n{ts()} [STEP] 메인탭: {main_name}")
+            disable_blocking_ui(page)
+            if not open_main_tab(page, mt):
+                # 패널 준비 실패 -> 한번 새로고침 후 재시도
+                page.reload(wait_until="domcontentloaded")
+                page.wait_for_timeout(600)
+                disable_blocking_ui(page)
+                if not open_main_tab(page, mt):
+                    print(f"{ts()} [WARN] 메인탭 준비 실패: {main_name}")
                     continue
 
-                close_all_modals(page)
-                disable_blocking_ui(page)
+            # 서브탭 수집(메인패널 스코프)
+            subs = subtabs_in_main_panel(page, mt["panel_id"])
+            if not subs:
+                # 서브탭이 없으면 현재 패널 하나만 처리(- 로 명시)
+                subs = [{"name": "-", "locator": page.locator("body"), "panel_id": mt["panel_id"]}]
 
-                ok = False
-                for link in triggers:
-                    target = link.get_attribute("data-dialog-target") or link.get_attribute("data-dialog-trigger") or "#modalProduct"
-                    target = ("#" + target) if target and not target.startswith("#") else (target or "#modalProduct")
-                    print(f"{ts()}     - 모달 트리거 클릭: target='{target}'")
-
-                    try:
-                        modal_el = click_and_wait_modal(page, link, target, open_timeout=10000)
-                    except Exception as e:
-                        print(f"{ts()}     [WARN] 모달 오픈 실패: {e}")
-                        close_all_modals(page)
+            for st in subs:
+                sub_name = st["name"]
+                if sub_name != "-":
+                    ok, panel = open_subtab(page, mt["panel_id"], st)
+                    if not ok:
+                        # 환기 + 재시도
+                        page.reload(wait_until="domcontentloaded")
+                        page.wait_for_timeout(600)
+                        disable_blocking_ui(page)
+                        ok, panel = open_subtab(page, mt["panel_id"], st)
+                        if not ok:
+                            print(f"{ts()} [WARN] 패널 준비 미확인: {main_name} > {sub_name}")
+                            continue
+                else:
+                    # 서브탭 없음: 메인 패널을 그대로 사용
+                    panel = page.locator(f'#{mt["panel_id"]}') if mt["panel_id"] else page.locator("[role=tabpanel]").first
+                    if not wait_panel_ready(panel):
+                        print(f"{ts()} [WARN] 패널 준비 미확인: {main_name} > {sub_name}")
                         continue
 
-                    # 만약 다른 모달(id != modalProduct)이면 닫고 다음 트리거 시도
-                    try:
-                        root_id = modal_el.first.get_attribute("id") or ""
-                        if root_id and root_id != "modalProduct":
-                            print(f"{ts()}     [INFO] 대상외 모달('{root_id}') -> 닫고 다음 트리거 시도")
-                            close_all_modals(page)
-                            continue
-                    except Exception:
-                        pass
+                # ---- 2-페이즈: 스캔 → 파싱 ----
+                acc_index = scan_accordion_index(page, main_name, sub_name, panel)
+                parse_from_index(page, panel, acc_index, store, max_per_tab)
 
-                    # HTML 추출 전 모달 내부 확장/로드 유도
-                    try:
-                        expand_modal_content(page, modal_el)
-                    except Exception:
-                        pass
-
-                    # HTML 추출
-                    try:
-                        content = modal_el.locator(".c-modal__content, .c-modal__body, [role='document'], .c-modal__dialog")
-                        html = content.inner_html() if content.count() > 0 else modal_el.inner_html()
-                    except Exception:
-                        html = modal_el.inner_html()
-
-                    # 스크린샷/저장
-                    base_name = list_title or f"{tab_name}_{subtab_name or 'default'}_{i+1:03d}"
-                    modal_png = outdir / "modals" / f"{safe_filename(base_name)}.png"
-                    try:
-                        modal_el.screenshot(path=str(modal_png))
-                    except Exception:
-                        page.screenshot(path=str(outdir / "screens" / f"{safe_filename(base_name)}_page.png"))
-
-                    modal_html_path = outdir / "html" / f"{safe_filename(base_name)}.html"
-                    try:
-                        modal_html_path.write_text(html, encoding="utf-8")
-                    except Exception:
-                        alt = outdir / "html" / f"{safe_filename(base_name)}_{int(time.time())}.html"
-                        alt.write_text(html, encoding="utf-8")
-                        modal_html_path = alt
-
-                    # 파싱 & CSV
-                    fields = parse_modal_fields(html)
-                    ext = parse_modal_all(html)
-                    with out_csv.open("a", encoding="utf-8", newline="") as f:
-                        w = csv.writer(f)
-                        w.writerow([
-                            "ktmmobile",
-                            tab_name,
-                            subtab_name or "",
-                            i + 1,
-                            list_title or "",
-                            fields.get("modal_title") or "",
-                            fields.get("modal_price_text") or "",
-                            fields.get("modal_price") or "",
-                            fields.get("speed_toplist_modal") or "",
-                            fields.get("speed_dataguide_modal") or "",
-                            str(modal_html_path),
-                            str(modal_png),
-                            ext.get("modal_text_all") or "",
-                            ext.get("modal_sections_json") or "",
-                            ext.get("modal_dl_json") or "",
-                            ext.get("modal_tables_json") or "",
-                            ext.get("modal_links_json") or "",
-                            ext.get("modal_bullets_json") or "",
-                        ])
-
-                    ok = True
-                    close_all_modals(page)
-                    time.sleep(REQUEST_INTERVAL_SEC)
-                    break  # 해당 카드 수집 완료
-
-                if not ok:
-                    print(f"{ts()}     [SKIP] 카드 #{i+1}: modalProduct 수집 실패")
-
-        # 상단 탭 순회
-        for tab_name in found_top:
-            print(f"\n{ts()} [STEP] 탭 선택: {tab_name}")
+        if trace:
+            tr = outdir / "trace.zip"
             try:
-                close_all_modals(page)
-                page.locator("button.c-tabs__button", has_text=tab_name).first.click()
-                page.wait_for_timeout(250)
-            except Exception as e:
-                print(f"{ts()} [WARN] 탭 클릭 오류({tab_name}): {e}")
-
-            # 현재 표시중인 탭패널에서 서브탭(LTE/5G)만 추출
-            sub_candidates = []
-            try:
-                visible_panel = page.locator("[role='tabpanel']").filter(has_not_text="aria-hidden=\"true\"")
-                # 보이는 패널이 명확하지 않으면 전체에서 'LTE','5G' 텍스트 버튼을 추림
-                btns = visible_panel.locator("button.c-tabs__button")
-                if btns.count() == 0:
-                    btns = page.locator("button.c-tabs__button")
-                for i in range(btns.count()):
-                    try:
-                        t = btns.nth(i).inner_text().strip()
-                        if any(key in t for key in ["LTE", "5G"]):
-                            if t not in sub_candidates:
-                                sub_candidates.append(t)
-                    except Exception:
-                        pass
+                ctx.tracing.stop(path=str(tr))
+                print(f"{ts()} [TRACE] {tr} 저장됨")
             except Exception:
                 pass
 
-            if not sub_candidates:
-                # 서브탭 없음
-                iterate_cards(tab_name, None)
-            else:
-                for sub_t in sub_candidates:
-                    try:
-                        close_all_modals(page)
-                        page.locator("button.c-tabs__button", has_text=sub_t).first.click()
-                        page.wait_for_timeout(250)
-                    except Exception:
-                        pass
-                    iterate_cards(tab_name, sub_t)
-
-        if trace:
-            trace_path = outdir / "trace.zip"
-            ctx.tracing.stop(path=str(trace_path))
-            print(f"{ts()} [TRACE] {trace_path} 저장됨 (playwright show-trace '{trace_path}')")
-
         ctx.close()
         browser.close()
-        print(f"\n{ts()} [완료] CSV: {out_csv}\n- 모달 HTML: {outdir/'html'}\n- 스샷: {outdir/'modals'} / {outdir/'screens'}")
+        print(f"{ts()} [DONE] 수집 완료")
+        print(f"- JSONL: {store.jsonl}")
+        print(f"- CSV  : {store.csvf}")
+        print(f"- HTML : {outdir/'html'}")
 
-# -------------------- 엔트리 --------------------
+# ---- 엔트리 ----
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--url", default=DEFAULT_URL, help="시작 URL")
-    ap.add_argument("--headless", action="store_true", help="헤드리스 모드(창 안 띄움)")
-    ap.add_argument("--slowmo", type=int, default=0, help="동작을 느리게(ms)")
-    ap.add_argument("--outdir", default=None, help="출력 폴더(기본: 스크립트 폴더 'KT_MMobile')")
-    ap.add_argument("--max-per-tab", type=int, default=None, help="탭당 최대 카드 수 (디버그용 제한)")
-    ap.add_argument("--trace", action="store_true", help="Playwright trace 저장")
+    ap.add_argument("--url", default=DEFAULT_URL)
+    ap.add_argument("--headless", action="store_true")
+    ap.add_argument("--slowmo", type=int, default=0)
+    ap.add_argument("--outdir", default="ktmm_out_seq")
+    ap.add_argument("--max-per-tab", type=int, default=None)
+    ap.add_argument("--trace", action="store_true")
     args = ap.parse_args()
 
-    outdir = Path(args.outdir) if args.outdir else Path(__file__).resolve().parent
+    outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
 
     run(
