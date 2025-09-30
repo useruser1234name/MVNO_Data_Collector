@@ -1,0 +1,9 @@
+찬스모바일
+https://chancemobile.co.kr/view/plan/phone_plan.aspx
+
+<div class="data_wrap" onclick="fnMovePlanDetail(&quot;LPZ1004828&quot;, &quot;ffa6c81f5b945854a4bc852a8e724aea&quot;);"><div><ul class="data_tag"><li class="tag_lg">LGU+</li><li class="tag_lte">LTE</li></ul><p class="data_name">[CHM] 알찬 심플1.5GB</p><p class="data_sub">초저가 알뜰요금제 추천</p><ul class="data_info"><li><img src="/common/image/common/data.svg" alt="데이터"><div><p>1.5GB</p><div></div></div></li><li><img src="/common/image/common/call.svg" alt="전화기"><div><p>100분</p></div></li><li><img src="/common/image/common/mms.svg" alt="문자"><div><p>100건</p></div></li></ul><div class="data_m"><p>7,700원</p><p><span>월</span>110<span>원</span></p></div>  <div class="d5">       <p>6개월 후&nbsp;</p><p class="d6">3,300원</p>  </div> </div></div>
+
+
+fnMovePlanDetail(&quot;LPZ1004828&quot;, &quot;ffa6c81f5b945854a4bc852a8e724aea&quot;);
+
+https://chancemobile.co.kr/view/plan/phone_plan_detail.aspx?gdcd=LPZ1004828&poscd=ffa6c81f5b945854a4bc852a8e724aea

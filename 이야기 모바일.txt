@@ -1,0 +1,9 @@
+이야기 모바일
+https://www.eyagi.co.kr/shop/plan/findMyType.php
+
+<a class="plan-item" href="javascript:;" data-pay-type="2" data-mno-gubun="SKT" data-comm-code="PC0NB00180"><div class="point"><div class="badge-box"><span class="badge mno mno-skt">SKT</span><div class="pc-right"><span class="badge period">4개월 할인</span></div><p class="name">내맘대로S(100+1GB)</p></div></div><div class="spec-box"><div class="data"><p class="free">1GB</p></div><div class="call"><p class="free">100분</p></div><div class="sms"><p class="free">100건</p></div></div><div class="price-box"><p class="basic-price"><span class="text">월</span> 9,900<span class="text">원</span></p><p class="current-price"><span class="text">월</span> 100<span class="text">원</span></p><p class="orgin-price">4개월&nbsp;후&nbsp;5,500원</p></div></a>
+
+
+https://www.eyagi.co.kr/shop/plan/detail.php?agent_code=KSD0002&comm_code=PC0NB00078
+
+PC0NB00078

@@ -1,0 +1,24 @@
+Marveling모바일
+
+<div class="tab_box">
+      		<ul class="tab_box_list_t2">
+      			
+					<li><a class="tab_box_link on" href="/rate_plan.do?type=T007">이벤트 요금제</a></li>
+				
+					<li><a class="tab_box_link " href="/rate_plan.do?type=T003">LTE 요금제</a></li>
+				
+					<li><a class="tab_box_link " href="/rate_plan.do?type=T002">5G 무제한 요금제</a></li>
+				
+					<li><a class="tab_box_link " href="/rate_plan.do?type=T006">24개월 할인 요금제</a></li>
+				
+					<li><a class="tab_box_link " href="/rate_plan.do?type=T009">태블릿 요금제</a></li>
+				
+      		</ul>
+      	</div>
+
+
+<a href="rateplan_view.do?type=T007&amp;subtype=&amp;no=2506" class="card_rate_link">
+	      						<p class="badge_wrap">
+	      						
+	
+

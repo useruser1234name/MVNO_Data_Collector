@@ -1,0 +1,10 @@
+SMT모바일
+
+
+<a id="Mobile" class="mb-2 inline-block w-full rounded-[20px] border bg-white px-3 py-4 text-14 shadow-sm md:p-4 md:text-16 xl:hidden" href="/phoneplan/55"><span class="flex items-center"><span class="hidden md:flex rounded-[8px] h-[22px] mr-1 px-[16px] font-bold inline-block select-none rounded-[50px] py-[1px] md:py-[2px] items-center uppercase text-10 md:text-14 text-white bg-new_main">SKT</span><span class="md:hidden rounded-[8px] h-[22px] mr-1 px-[8.5px] font-bold inline-block select-none rounded-[50px] py-[1px] md:py-[2px] items-center uppercase text-10 md:text-14 text-white bg-new_main">SKT</span></span><h1 class="text-14 pt-2.5 text-txt-01 md:text-21">스마일 7GB+</h1><span class="flex items-center pt-3"><span class="relative mr-1.5 flex h-5 w-5"><img alt="" loading="lazy" decoding="async" data-nimg="fill" src="/icons/main_data.svg" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;"></span><p class="text-14 text-nowrap md:text-16">총 7GB </p><p class="pl-1 text-10 text-txt-06 md:text-12">소진 후 최대 1Mbps 속도 무제한</p></span><span class="flex items-center pt-1"><span class="relative mr-1.5 flex h-5 w-5"><img alt="" loading="lazy" decoding="async" data-nimg="fill" src="/icons/main_phone_icon.svg" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;"></span><p>기본 제공</p><p class="pl-1 text-11 text-txt-06 md:text-12">부가통화 300분</p><span class="relative mx-1.5 flex h-5 w-5"><img alt="" loading="lazy" decoding="async" data-nimg="fill" src="/icons/main_text_icon.svg" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;"></span><p>기본제공</p></span><span class="flex font-bold items-end justify-end space-x-1 pt-4 md:pt-0"><p>월</p><p class="text-20 text-new_main md:text-28">7,000</p><p>원</p></span><p class="flex items-end justify-end text-10 text-txt-03 md:text-12">7개월 이후
+                          월 24,200원</p></a>
+
+
+
+href="/phoneplan/55
+
