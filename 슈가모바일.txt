@@ -1,4 +1,0 @@
-슈가모바일
-https://www.sugarmobile.co.kr/rate_plan.do;jsessionid=9B099541D12068D9A35815F227DDB073
-
-<a href="rateplan_view.do?type=T006&amp;subtype=&amp;no=1776" class="card_rate_link">
