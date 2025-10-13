@@ -1,4 +1,0 @@
-ShakeMoblie
-
-<button type="button" onclick="feeDetail('PL244O983_9');">자세히보기</button>
-url get
