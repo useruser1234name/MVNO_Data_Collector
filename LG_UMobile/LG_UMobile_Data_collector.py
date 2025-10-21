@@ -94,6 +94,7 @@ def extract_speed_toplist(soup: BeautifulSoup) -> str | None:
     """
     상단 안내 리스트(ul.notification.free)에서 'Mbps'가 들어간 한 줄만 추출.
     예) '최대 5Mbps 속도로 데이터 무제한 이용'
+    (기존 구조용)
     """
     for li in soup.select("div.detail-info ul.notification.free > li"):
         txt = _direct_text(li)  # 내부 tooltip 텍스트 제외
@@ -110,6 +111,7 @@ def extract_speed_from_data_guide(soup: BeautifulSoup) -> str | None:
     """
     '데이터 이용 안내' 섹션에서 'Mbps' 포함 문장(여러 개면 |로 합침)
     예) '월 기본 제공량 소진 시, 최대 5Mbps 속도로 데이터를 계속 사용…'
+    (기존 구조용)
     """
     # 1) '데이터 이용 안내' 헤더 찾기 (h2 텍스트 매칭)
     h2 = None
@@ -139,10 +141,77 @@ def extract_speed_from_data_guide(soup: BeautifulSoup) -> str | None:
         return " | ".join(uniq)
     return None
 
-def parse_detail_speed_bits(soup: BeautifulSoup) -> dict:
+# ------------ 신규 카드형 구조 파서 ------------
+def parse_card_like_header(soup: BeautifulSoup) -> dict:
+    """
+    신규 상세 카드 구조에서 핵심 필드 추출
+    - title: strong.pln-tit
+    - feature_vol: .spc-wrp .pln-spc
+    - feature_supply: .spc-list 내 span들을 공백으로 연결
+    - price_origin: .price-box .cost
+    - price_discount: .price-box .dc
+    - chips: .badge-box img[alt] 텍스트를 | 로 합침
+    - speed_toplist: .spc-wrp .tip-box p 중 'Mbps' 포함 문장
+    """
+    def t(sel):
+        el = soup.select_one(sel)
+        return el.get_text(strip=True) if el else None
+
+    # 제목
+    title = t("strong.pln-tit")
+
+    # 제공 스펙
+    feature_vol = t(".spc-wrp .pln-spc")
+
+    # 통화/문자/망 표기들(있으면 합침)
+    supply_bits = []
+    for sp in soup.select(".spc-list span"):
+        s = sp.get_text(strip=True)
+        if s:
+            supply_bits.append(s)
+    feature_supply = " ".join(supply_bits) if supply_bits else None
+
+    # 요금
+    origin_pay_txt = t(".price-box .cost")
+    discount_pay_txt = t(".price-box .dc")
+    price_origin = parse_money(origin_pay_txt)
+    price_discount = parse_money(discount_pay_txt)
+
+    # 칩/뱃지(이미지 alt 기반)
+    chips_list = []
+    for img in soup.select(".badge-box img[alt]"):
+        alt = (img.get("alt") or "").strip()
+        if alt:
+            chips_list.append(alt)
+    chips = "|".join(dict.fromkeys(chips_list)) if chips_list else None
+
+    # 속도 문구(.spc-wrp 안의 tip-box)
+    speed_toplist = None
+    tip_p = soup.select_one(".spc-wrp .tip-box p")
+    if tip_p:
+        txt = " ".join(tip_p.stripped_strings)
+        if re.search(r"(?i)\bmbps\b", txt):
+            speed_toplist = re.sub(r"\s+", " ", txt).strip()
+
     return {
-        "speed_toplist": extract_speed_toplist(soup),
-        "speed_data_guide": extract_speed_from_data_guide(soup),
+        "title": title,
+        "feature_vol": feature_vol,
+        "feature_supply": feature_supply,
+        "price_origin": price_origin,
+        "price_discount": price_discount,
+        "chips": chips,
+        "speed_toplist": speed_toplist,
+    }
+
+def parse_detail_speed_bits(soup: BeautifulSoup, prefer_toplist: str | None = None) -> dict:
+    """
+    prefer_toplist: 카드형 구조에서 이미 뽑은 speed_toplist가 있으면 그대로 사용
+    """
+    toplist = prefer_toplist or extract_speed_toplist(soup)
+    data_guide = extract_speed_from_data_guide(soup)
+    return {
+        "speed_toplist": toplist,
+        "speed_data_guide": data_guide,
     }
 
 # ------------ 상세 페이지 파서 ------------
@@ -164,41 +233,50 @@ def parse_detail_page(soup: BeautifulSoup, url: str) -> dict:
     feeName  = frm.select_one("#feeName")["value"].strip() if frm and frm.select_one("#feeName") else None
     feeType  = frm.select_one("#feeType")["value"].strip() if frm and frm.select_one("#feeType") else None
 
-    # 타이틀
-    title = clean_spaces(get_text(soup.select_one(".detail-header h2.tit")) or feeName)
+    # ---------- 신규 카드형 구조 우선 파싱 ----------
+    card = parse_card_like_header(soup)
 
-    # 칩/뱃지 (텍스트, 이미지 alt 모두 수집)
-    chips = []
-    chip_wrap = soup.select_one(".detail-header .chip-wrap")
-    if chip_wrap:
-        # span.chip 텍스트
-        for n in chip_wrap.select(".chip"):
-            t = get_text(n)
-            if t:
-                chips.append(t)
-        # 이미지 alt
-        for img in chip_wrap.select("img[alt]"):
-            alt = img.get("alt", "").strip()
-            if alt:
-                chips.append(alt)
-    chips = "|".join(dict.fromkeys([c for c in chips if c])) or None  # 중복 제거, |로 합침
+    # ---------- 기존(detail-header/footer) 폴백 ----------
+    # 제목: 신규 구조가 없으면 기존 구조/feeName로 보충
+    legacy_title = clean_spaces(get_text(soup.select_one(".detail-header h2.tit")) or feeName)
+    title = card["title"] or legacy_title
 
-    # 상단 제공 정보 (데이터/통화/문자 등 표시)
-    feature_vol = clean_spaces(get_text(soup.select_one(".detail-header .feature .vol")))
-    feature_limit = clean_spaces(get_text(soup.select_one(".detail-header .feature .limit")))
-    feature_supply = clean_spaces(get_text(soup.select_one(".detail-header .feature .supply")))
+    # 제공 정보
+    feature_vol = card["feature_vol"] or clean_spaces(get_text(soup.select_one(".detail-header .feature .vol")))
+    feature_limit = clean_spaces(get_text(soup.select_one(".detail-header .feature .limit")))  # 신규 구조엔 없음
+    feature_supply = card["feature_supply"] or clean_spaces(get_text(soup.select_one(".detail-header .feature .supply")))
 
-    # 요금(정가/할인가)
-    origin_pay_txt = get_text(soup.select_one(".detail-footer .pay-amount .origin-pay"))
-    discount_pay_txt = get_text(soup.select_one(".detail-footer .pay-amount .discount-pay"))
-    price_origin = parse_money(origin_pay_txt)
-    price_discount = parse_money(discount_pay_txt)
+    # 가격
+    price_origin = card["price_origin"]
+    price_discount = card["price_discount"]
+    if price_origin is None:
+        origin_pay_txt = get_text(soup.select_one(".detail-footer .pay-amount .origin-pay"))
+        price_origin = parse_money(origin_pay_txt)
+    if price_discount is None:
+        discount_pay_txt = get_text(soup.select_one(".detail-footer .pay-amount .discount-pay"))
+        price_discount = parse_money(discount_pay_txt)
 
-    # devKdCd: URL 파라미터 또는 페이지 내부에서 유추 (없으면 None)
+    # 칩/뱃지
+    chips = card["chips"]
+    if not chips:
+        chips_list = []
+        chip_wrap = soup.select_one(".detail-header .chip-wrap")
+        if chip_wrap:
+            for n in chip_wrap.select(".chip"):
+                t = get_text(n)
+                if t:
+                    chips_list.append(t)
+            for img in chip_wrap.select("img[alt]"):
+                alt = img.get("alt", "").strip()
+                if alt:
+                    chips_list.append(alt)
+        chips = "|".join(dict.fromkeys([c for c in chips_list if c])) or None
+
+    # devKdCd: URL에서 받는 값 유지
     devKdCd = url_params["devKdCd"]
 
-    # Mbps 문구 추출
-    speed_bits = parse_detail_speed_bits(soup)
+    # Mbps 문구(신규 toplist 우선 → 기존 섹션 보강)
+    speed_bits = parse_detail_speed_bits(soup, prefer_toplist=card["speed_toplist"])
 
     row = {
         "site": "uplusumobile",

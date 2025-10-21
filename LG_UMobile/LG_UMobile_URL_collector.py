@@ -11,12 +11,7 @@ from urllib3.util.retry import Retry
 
 
 LIST_URLS = [
-    "https://www.uplusumobile.com/product/pric/usim/pricList?fltrTypeCtgr=LTE",
-    "https://www.uplusumobile.com/product/pric/usim/pricList?fltrTypeCtgr=SPCL",
-    "https://www.uplusumobile.com/product/pric/usim/pricList?fltrTypeCtgr=5G",
-    "https://www.uplusumobile.com/product/pric/phone/pricList?fltrTypeCtgr=LTE",
-    "https://www.uplusumobile.com/product/pric/phone/pricList?fltrTypeCtgr=5G",
-    "https://www.uplusumobile.com/product/pric/phone/pricList?fltrTypeCtgr=SPCL",
+    "https://www.uplusumobile.com/product/pric/usim/pricList"
 ]
 
 DETAIL_BASE = "https://www.uplusumobile.com/product/pric/pricDetail"
@@ -85,30 +80,88 @@ def make_detail_url(seq: str, upPpnCd: str, devKdCd: str) -> str:
     return f"{DETAIL_BASE}?{urlencode(qs)}"
 
 
+def _clean(s: str | None) -> str | None:
+    return s.strip() if s else None
+
+
+def _split_data_seq(data_seq: str | None):
+    """
+    data-seq가 '003||27' 형태이면 (devKdCd='003', seq='27') 반환
+    아니라면 (None, None)
+    """
+    if not data_seq:
+        return None, None
+    parts = [p.strip() for p in data_seq.split("||")]
+    if len(parts) == 2 and parts[0] and parts[1]:
+        return parts[0], parts[1]
+    return None, None
+
+
 def extract_detail_urls_from_list(soup: BeautifulSoup) -> list[dict]:
     """
-    목록 페이지에서 '비교하기' 버튼의 data-* 속성 추출.
-    - 필수: data-hp-ppn-seq, data-up-ppn-cd, data-dev-kd-cd
-    - 선택: data-ppn-cd (참고용)
+    목록 페이지에서 상세 이동 파라미터 추출.
+
+    1) (기존) '비교하기' 버튼 data-* 기반:
+       - data-hp-ppn-seq, data-up-ppn-cd, data-dev-kd-cd
+
+    2) (신규) <a class="gtm-tracking" ... onclick="fnMoveDetail(ctgrId, seq)">
+       - 가능한 소스:
+         * data-seq="003||27"  -> devKdCd=003, seq=27
+         * seq="27"
+         * ctgrId="003" 또는 ctgrid="003"  (대소/철자 변형 대비)
+       - upPpnCd는 대부분 제공 안 됨 -> 빈 문자열("")
     """
     rows = []
-    # data 속성 기반이 가장 견고
+
+    # --- 1) 기존 버튼 방식 ---
     buttons = soup.select("button[data-hp-ppn-seq][data-up-ppn-cd][data-dev-kd-cd]")
     for b in buttons:
-        seq = b.get("data-hp-ppn-seq")
-        up = b.get("data-up-ppn-cd")
-        dev = b.get("data-dev-kd-cd")
-        ppn = b.get("data-ppn-cd")  # 참고(사용 안 해도 OK)
-        if not (seq and up and dev):
+        seq = _clean(b.get("data-hp-ppn-seq"))
+        up = _clean(b.get("data-up-ppn-cd"))
+        dev = _clean(b.get("data-dev-kd-cd"))
+        ppn = _clean(b.get("data-ppn-cd"))  # 참고용
+        if not (seq and up is not None and dev):
             continue
         rows.append(
             {
-                "seq": seq.strip(),
-                "upPpnCd": up.strip(),
-                "devKdCd": dev.strip(),
-                "ppnCd": (ppn or "").strip() or None,
+                "seq": seq,
+                "upPpnCd": up or "",
+                "devKdCd": dev,
+                "ppnCd": ppn or None,
             }
         )
+
+    # --- 2) 신규 앵커 방식 ---
+    anchors = soup.select("a.gtm-tracking")
+    for a in anchors:
+        # 2-1) data-seq="003||27" 우선 분해
+        dev_from_combo, seq_from_combo = _split_data_seq(_clean(a.get("data-seq")))
+        # 2-2) 개별 속성
+        seq_attr = _clean(a.get("seq")) or _clean(a.get("data-hp-ppn-seq")) or _clean(a.get("data-seq-single"))
+        ctgr_attr = (
+            _clean(a.get("ctgrId"))
+            or _clean(a.get("ctgrid"))
+            or _clean(a.get("ctgrID"))
+            or _clean(a.get("ctgr_id"))
+        )
+
+        # 선택지 결합 로직
+        seq = seq_from_combo or seq_attr
+        dev = dev_from_combo or ctgr_attr
+        if not (seq and dev):
+            # 필요한 값이 둘 다 확보되지 않으면 스킵
+            continue
+
+        # upPpnCd가 별도로 안 보임 -> 빈 문자열로 채움
+        rows.append(
+            {
+                "seq": seq,
+                "upPpnCd": "",
+                "devKdCd": dev,
+                "ppnCd": None,
+            }
+        )
+
     return rows
 
 
