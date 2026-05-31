@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    volumes:
+      - airflow-db:/var/lib/postgresql/data
+
+  airflow-webserver:
+    build:
+      context: ../
+      dockerfile: docker/airflow/Dockerfile
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      - PYTHONPATH=/opt/airflow
+      - MVNO_OUTPUT_DIR=/opt/airflow/output/raw
+      - MVNO_REFERENCE_DIR=/opt/airflow/etl/reference
+      - MVNO_DB_DSN=${MVNO_DB_DSN:-}
+    depends_on:
+      - postgres
+    volumes:
+      - ../orchestration:/opt/airflow/dags
+      - ../collectors:/opt/airflow/collectors
+      - ../etl:/opt/airflow/etl
+      - ../pipeline:/opt/airflow/pipeline
+      - ../schemas:/opt/airflow/schemas
+      - ../output:/opt/airflow/output
+    ports:
+      - "8080:8080"
+    command: webserver
+
+  airflow-scheduler:
+    build:
+      context: ../
+      dockerfile: docker/airflow/Dockerfile
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      - PYTHONPATH=/opt/airflow
+      - MVNO_OUTPUT_DIR=/opt/airflow/output/raw
+      - MVNO_REFERENCE_DIR=/opt/airflow/etl/reference
+      - MVNO_DB_DSN=${MVNO_DB_DSN:-}
+    depends_on:
+      - postgres
+    volumes:
+      - ../orchestration:/opt/airflow/dags
+      - ../collectors:/opt/airflow/collectors
+      - ../etl:/opt/airflow/etl
+      - ../pipeline:/opt/airflow/pipeline
+      - ../schemas:/opt/airflow/schemas
+      - ../output:/opt/airflow/output
+    command: scheduler
+
+volumes:
+  airflow-db:
+
+
+

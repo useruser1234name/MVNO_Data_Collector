@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  collector:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - MVNO_OUTPUT_DIR=/app/output/raw
+      - MVNO_REFERENCE_DIR=/app/etl/reference
+      # Set from .env or command line
+      - MVNO_DB_DSN=${MVNO_DB_DSN:-}
+    volumes:
+      - ./output:/app/output
+    command: >
+      python -m pipeline.run_collectors
+      --output-dir /app/output/raw
+      --concurrency 3
+
+
+

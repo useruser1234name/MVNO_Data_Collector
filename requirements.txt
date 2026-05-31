@@ -1,0 +1,10 @@
+# 전체 의존성(하위호환용 통합 핀). 슬림 이미지는 requirements/ 의 분리본을 사용.
+playwright==1.48.0
+pandas==2.2.2
+SQLAlchemy==2.0.50
+psycopg2-binary==2.9.9
+beautifulsoup4==4.12.3
+lxml==6.0.1
+requests==2.32.3
+httpx==0.27.2
+PyYAML==6.0.2

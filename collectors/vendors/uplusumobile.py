@@ -16,6 +16,7 @@ from urllib3.util.retry import Retry
 
 from collectors.base import BaseCollector
 from collectors.registry import registry
+from schemas import units
 from schemas.plan_record import PlanRecord
 
 logger = logging.getLogger(__name__)
@@ -331,61 +332,6 @@ def parse_detail_page(soup: BeautifulSoup, url: str) -> dict[str, Any]:
     }
 
 
-def _parse_data_allowance(text: str | None, limit_text: str | None) -> tuple[int, dict[str, Any]]:
-    metadata: dict[str, Any] = {}
-    if not text:
-        return 0, metadata
-    normalized = re.sub(r"\s+", " ", text)
-    metadata["feature_vol_raw"] = normalized
-    if limit_text:
-        metadata["feature_limit_raw"] = re.sub(r"\s+", " ", limit_text)
-    if "무제한" in normalized:
-        metadata["unlimited_data"] = True
-        return 0, metadata
-    match = re.search(r"(\d+(?:\.\d+)?)\s*(TB|GB|MB)", normalized, flags=re.IGNORECASE)
-    if not match:
-        return 0, metadata
-    value = float(match.group(1))
-    unit = match.group(2).upper()
-    multiplier = 1
-    if unit == "TB":
-        multiplier = 1024 * 1024
-    elif unit == "GB":
-        multiplier = 1024
-    allowance = int(value * multiplier)
-    return allowance, metadata
-
-
-def _parse_voice_minutes(text: str | None) -> tuple[int | None, dict[str, Any]]:
-    info: dict[str, Any] = {}
-    if not text:
-        return None, info
-    normalized = re.sub(r"\s+", " ", text)
-    info["voice_supply_raw"] = normalized
-    if "무제한" in normalized:
-        info["voice_unlimited"] = True
-        return None, info
-    match = re.search(r"(\d+)\s*분", normalized)
-    if match:
-        return int(match.group(1)), info
-    return None, info
-
-
-def _parse_sms_count(text: str | None) -> tuple[int | None, dict[str, Any]]:
-    info: dict[str, Any] = {}
-    if not text:
-        return None, info
-    normalized = re.sub(r"\s+", " ", text)
-    info["sms_supply_raw"] = normalized
-    if "무제한" in normalized:
-        info["sms_unlimited"] = True
-        return None, info
-    match = re.search(r"(\d+)\s*건", normalized)
-    if match:
-        return int(match.group(1)), info
-    return None, info
-
-
 def _make_plan_id(candidate: DetailCandidate, detail: dict[str, Any]) -> str:
     seq = candidate.seq or detail.get("seq") or "unknown"
     dev = candidate.dev_kd_cd or detail.get("devKdCd") or "na"
@@ -395,32 +341,43 @@ def _make_plan_id(candidate: DetailCandidate, detail: dict[str, Any]) -> str:
 
 def _detail_to_plan_record(candidate: DetailCandidate, detail: dict[str, Any]) -> PlanRecord:
     monthly_fee_source = detail.get("price_discount") or detail.get("price_origin") or 0
-    data_allowance_mb, data_meta = _parse_data_allowance(detail.get("feature_vol"), detail.get("feature_limit"))
-    voice_minutes, voice_meta = _parse_voice_minutes(detail.get("feature_supply"))
-    sms_count, sms_meta = _parse_sms_count(detail.get("feature_supply"))
+    # 통합 normalizer로 단위/무제한/실패 일관 처리.
+    data_q = units.parse_data_to_mb(detail.get("feature_vol"))
+    voice_q = units.parse_voice(detail.get("feature_supply"))
+    sms_q = units.parse_sms(detail.get("feature_supply"))
 
     metadata: dict[str, Any] = {
         "detail": detail,
         "candidate": asdict(candidate),
     }
-    metadata.update(data_meta)
-    metadata.update(voice_meta)
-    metadata.update(sms_meta)
+    if detail.get("feature_limit"):
+        metadata["feature_limit_raw"] = re.sub(r"\s+", " ", str(detail.get("feature_limit")))
 
     name = detail.get("title") or detail.get("feeName") or _make_plan_id(candidate, detail)
     promotion_parts = [part for part in [detail.get("chips"), detail.get("speed_toplist"), detail.get("speed_data_guide")] if part]
     promotion = " | ".join(promotion_parts) if promotion_parts else None
 
+    parse_status = {
+        "data": data_q.status,
+        "voice": voice_q.status,
+        "sms": sms_q.status,
+        "fee": units.STATUS_OK if monthly_fee_source else units.STATUS_MISSING,
+    }
+
     return PlanRecord(
         vendor="uplusumobile",
         plan_id=_make_plan_id(candidate, detail),
         name=name,
-        monthly_fee=float(monthly_fee_source),
-        data_allowance_mb=data_allowance_mb,
-        voice_minutes=voice_minutes,
-        sms_count=sms_count,
+        monthly_fee=float(monthly_fee_source or 0),
+        data_allowance_mb=data_q.value,
+        voice_minutes=voice_q.value,
+        sms_count=sms_q.value,
         network_type=candidate.category,
         promotion=promotion,
+        data_unlimited=data_q.unlimited,
+        voice_unlimited=voice_q.unlimited,
+        sms_unlimited=sms_q.unlimited,
+        parse_status=parse_status,
         metadata=metadata,
     )
 

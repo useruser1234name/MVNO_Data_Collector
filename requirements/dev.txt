@@ -1,0 +1,5 @@
+# 개발/테스트 의존성
+-r base.txt
+-r etl.txt
+pytest==8.3.2
+jsonschema==4.23.0

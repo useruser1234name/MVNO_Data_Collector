@@ -5,7 +5,7 @@ import abc
 import asyncio
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, List, Sequence
 
@@ -43,13 +43,13 @@ class BaseCollector(abc.ABC):
     async def run(self) -> Sequence[PlanRecord]:
         """Execute the collector and return the parsed records."""
         logger.info("Starting collector", extra={"collector": self.config.name})
-        start = datetime.utcnow()
+        start = datetime.now(timezone.utc)
         await self.setup()
         try:
             raw_entries = await self.fetch_entries()
             records = await self.parse_entries(raw_entries)
             await self.persist_records(records)
-            duration = (datetime.utcnow() - start).total_seconds()
+            duration = (datetime.now(timezone.utc) - start).total_seconds()
             logger.info(
                 "Collector finished",
                 extra={
@@ -81,7 +81,7 @@ class BaseCollector(abc.ABC):
         payload = [record.to_dict() for record in records]
         meta = {
             "collector": self.config.name,
-            "collected_at": datetime.utcnow().isoformat(),
+            "collected_at": datetime.now(timezone.utc).isoformat(),
             "metadata": self.config.metadata,
         }
         if self.field_policy is not None:

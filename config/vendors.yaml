@@ -1,0 +1,141 @@
+# MVNO/이통3사 사업자 카탈로그 — 단일 진실원천(single source of truth).
+# registry·동적 DAG·모니터링·문서가 이 파일에서 파생된다.
+#
+# 필드:
+#   key            : 수집기 등록 키(registry.register 키와 일치해야 함)
+#   display_name   : 표시명
+#   group          : mvno | mno
+#   network        : 지원 망(5G/LTE 등, 정보용)
+#   collector_type : requests | playwright | api | generic | stub
+#   enabled        : 스케줄/실행 대상 여부
+#   anti_bot_level : low | medium | high (스케줄/동시성/백오프 차등에 사용)
+#   schedule       : cron 표현식
+#   expected_min_records : 완주율/무음실패 감지 기준선(0이면 미설정)
+#   owner          : 담당자
+#   base_urls      : 수집 진입 URL(정보용)
+
+vendors:
+  amobile:
+    display_name: "A모바일"
+    group: mvno
+    network: "LTE/5G"
+    collector_type: requests
+    enabled: true
+    anti_bot_level: low
+    schedule: "0 */6 * * *"
+    expected_min_records: 1
+    owner: kci01
+    base_urls: []
+
+  egmobile:
+    display_name: "EG모바일"
+    group: mvno
+    network: "LTE/5G"
+    collector_type: requests
+    enabled: true
+    anti_bot_level: low
+    schedule: "10 */6 * * *"
+    expected_min_records: 1
+    owner: kci01
+    base_urls: []
+
+  eyagi:
+    display_name: "이야기모바일"
+    group: mvno
+    network: "LTE/5G"
+    collector_type: requests
+    enabled: true
+    anti_bot_level: low
+    schedule: "20 */6 * * *"
+    expected_min_records: 1
+    owner: kci01
+    base_urls: []
+
+  insmobile:
+    display_name: "인스모바일"
+    group: mvno
+    network: "LTE/5G"
+    collector_type: requests
+    enabled: true
+    anti_bot_level: low
+    schedule: "30 */6 * * *"
+    expected_min_records: 1
+    owner: kci01
+    base_urls: []
+
+  ktmmobile:
+    display_name: "KT M모바일"
+    group: mvno
+    network: "LTE/5G"
+    collector_type: playwright
+    enabled: true
+    anti_bot_level: medium
+    schedule: "40 */6 * * *"
+    expected_min_records: 1
+    owner: kci01
+    base_urls: []
+
+  uplusumobile:
+    display_name: "U+모바일"
+    group: mvno
+    network: "LTE/5G"
+    collector_type: requests
+    enabled: true
+    anti_bot_level: medium
+    schedule: "50 */6 * * *"
+    expected_min_records: 1
+    owner: kci01
+    base_urls:
+      - "https://www.uplusumobile.com/product/pric/usim/pricList"
+
+  example:
+    display_name: "Example (스모크 테스트용)"
+    group: mvno
+    network: "n/a"
+    collector_type: stub
+    enabled: false
+    anti_bot_level: low
+    schedule: "0 0 * * *"
+    expected_min_records: 0
+    owner: kci01
+    base_urls: []
+
+  # ---- 이통3사(MNO) 트랙: 전용 스텔스/저빈도 프로파일. 수집기 구현 전까지 비활성 ----
+  skt:
+    display_name: "SKT"
+    group: mno
+    network: "5G/LTE"
+    collector_type: playwright
+    enabled: false
+    anti_bot_level: high
+    schedule: "0 4 * * *"
+    expected_min_records: 0
+    owner: kci01
+    base_urls:
+      - "https://www.tworld.co.kr/"
+
+  kt:
+    display_name: "KT"
+    group: mno
+    network: "5G/LTE"
+    collector_type: playwright
+    enabled: false
+    anti_bot_level: high
+    schedule: "0 4 * * *"
+    expected_min_records: 0
+    owner: kci01
+    base_urls:
+      - "https://product.kt.com/"
+
+  lguplus:
+    display_name: "LG U+"
+    group: mno
+    network: "5G/LTE"
+    collector_type: playwright
+    enabled: false
+    anti_bot_level: high
+    schedule: "0 4 * * *"
+    expected_min_records: 0
+    owner: kci01
+    base_urls:
+      - "https://www.lguplus.com/"
