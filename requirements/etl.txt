@@ -1,0 +1,6 @@
+# ETL(변환/적재) 의존성
+-r base.txt
+pandas==2.2.2
+SQLAlchemy==2.0.50
+psycopg2-binary==2.9.9
+alembic==1.13.2

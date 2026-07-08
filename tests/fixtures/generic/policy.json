@@ -1,0 +1,9 @@
+{
+  "simplemvno": {
+    "NAME": [{"selector": ".title", "reason": "요금제명"}],
+    "PRICE": [{"selector": ".price", "reason": "월 요금"}],
+    "DATA": [{"selector": ".data"}],
+    "VOICE": [{"selector": ".voice"}],
+    "SMS": [{"selector": ".sms"}]
+  }
+}

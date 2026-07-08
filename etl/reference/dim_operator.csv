@@ -1,0 +1,10 @@
+operator_key,display_name,group,network,is_mvno
+amobile,A모바일,mvno,LTE/5G,true
+egmobile,EG모바일,mvno,LTE/5G,true
+eyagi,이야기모바일,mvno,LTE/5G,true
+insmobile,인스모바일,mvno,LTE/5G,true
+ktmmobile,KT M모바일,mvno,LTE/5G,true
+uplusumobile,U+모바일,mvno,LTE/5G,true
+skt,SKT,mno,5G/LTE,false
+kt,KT,mno,5G/LTE,false
+lguplus,LG U+,mno,5G/LTE,false

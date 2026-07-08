@@ -1,0 +1,6 @@
+# 경량 requests 기반 수집기 + 카탈로그 공통 의존성
+beautifulsoup4==4.12.3
+lxml==6.0.1
+requests==2.32.3
+httpx==0.27.2
+PyYAML==6.0.2

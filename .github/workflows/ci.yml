@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pyyaml jsonschema
+
+      - name: Lint (compile check)
+        run: python -m compileall collectors etl pipeline schemas orchestration
+
+      - name: Run tests
+        run: pytest -q
+
+      # 동적 DAG/카탈로그 정합성: 카탈로그에 선언된 수집기가 실제 등록되는지 교차검증
+      - name: Catalog ↔ registry consistency
+        run: python -m pipeline.catalog_check

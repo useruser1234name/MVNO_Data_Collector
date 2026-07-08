@@ -7,8 +7,17 @@ ENV/
 env.bak/
 venv.bak/
 
-# Data files
+# Python caches
+__pycache__/
+*.pyc
+
+# Data files (수집 산출물/대용량 데이터는 커밋 제외)
 *.csv
 *.html
 *.json
 *.jsonl
+
+# 단, 코드/테스트에 필요한 데이터는 추적(위 광범위 무시의 예외)
+!etl/reference/*.csv
+!tests/fixtures/**
+!config/**
