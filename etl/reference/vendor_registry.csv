@@ -1,0 +1,33 @@
+collector_name,operator_name,brand_name,site_url,priority,crawl_status,notes
+ktmmobile,KT엠모바일,KTM모바일,https://www.ktmmobile.com/,P0,implemented_local_csv,로컬 모달 CSV 기반 표준 collector 구현 완료
+uplusumobile,미디어로그,U+유모바일,https://www.uplusumobile.com/,P0,implemented_optional_deps,requests/bs4/lxml 의존성 설치 필요
+sk7mobile,SK텔링크,SK세븐모바일,https://www.sk7mobile.com/,P0,implemented_local_csv,로컬 상세 CSV 기반 표준 collector 구현 완료
+liivm,KB국민은행,KB리브모바일,https://www.liivm.com/,P0,planned,공식 웹/앱 API 탐색 필요
+theonemobile,더원플랫폼,더원모바일,https://www.theonem.co.kr/view/plan/phone_plan.aspx,P0,implemented_html,공식 HTML 요금제 collector 구현
+hellomobile,LG헬로비전,헬로모바일,https://direct.lghellovision.net/,P1,planned,공식 요금제 페이지 수집 후보
+amobile,에넥스텔레콤,A모바일,https://www.amobile.co.kr/,P1,planned,기존 Amobile 스크립트 표준 collector 포팅 필요
+eyesmobile,아이즈비전,아이즈모바일,https://www.eyes.co.kr/,P1,planned,요금제 DOM/API 분석 필요
+smartel,스마텔,스마텔,https://www.smartel.kr/phoneplan,P1,implemented_html,공식 HTML 요금제 collector 구현
+eyagi,큰사람커넥트,이야기모바일,https://www.eyagi.co.kr/,P1,planned,기존 Eyagi_Mobile 스크립트 표준 collector 포팅 필요
+tplus,한국케이블텔레콤,티플러스,https://www.tplusmobile.com/,P1,planned,eSIM/요금제 API 확인 필요
+winners,위너스텔,웰,https://www.wellmobile.co.kr/,P2,planned,공식 페이지 확인 필요
+mobing,유니컴즈,모빙,https://www.mobing.co.kr/,P2,planned,공식 API 탐색 필요
+freet,프리텔레콤,프리티,https://www.freet.co.kr/,P2,planned,공식 요금제 페이지 수집 후보
+inskobi,인스코비,인스코비,https://www.insmobile.co.kr/,P2,planned,브랜드/도메인 검증 필요
+skylife,KT스카이라이프,스카이라이프모바일,https://www.skylife.co.kr/product/mobile/goodsList.do,P2,planned,모바일 요금제 섹션 수집 후보
+codemobile,코드모바일,이지모바일,https://www.egmobile.co.kr/,P2,planned,브랜드/운영사 매핑 검증 필요
+gogomobile,고고팩토리,고고모바일,https://www.gogomobile.co.kr/,P2,planned,허브 입점 상품 우선 수집
+chancemobile,찬스모바일,찬스모바일,https://chancemobile.co.kr/view/plan/phone_plan.aspx,P2,implemented_html,공식 onclick 목록 collector 구현
+marveling,마블프로듀스,마블링모바일,https://www.marveling.co.kr/,P2,planned,브랜드/도메인 확인 필요
+aplus,에이프러스,아시아모바일,https://www.asiamobile.co.kr/,P2,planned,공식 페이지 확인 필요
+ckcomm,씨케이커뮤스트리,CK커뮤스트리,https://www.ckcomm.co.kr/,P2,planned,공식 페이지 확인 필요
+inskorea,인스코리아,인스모바일,https://www.insmobile.co.kr/,P2,planned,공식 페이지 확인 필요
+egmobile,코드모바일,EG모바일,https://www.egmobile.co.kr/,P2,planned,기존 EGMobile 스크립트 표준 collector 포팅 필요
+sugarmobile,슈가모바일,슈가모바일,https://www.sugarmobile.co.kr/,P2,planned,기존 Sugarmobile 스크립트 표준 collector 포팅 필요
+siwolmobile,시월모바일,시월모바일,https://www.siwolmobile.com/,P2,planned,기존 Siwol_Mobile 스크립트 검증 필요
+wooriwonmobile,우리원모바일,우리원모바일,https://www.wooriwonmobile.com/,P2,planned,기존 Wooriwonmobile 스크립트 검증 필요
+shakemobile,미니게이트,쉐이크모바일,https://www.shakemobile.co.kr/,P2,planned,기존 ShakeMoblie 스크립트 검증 필요
+monamobile,모나모바일,모나모바일,https://www.monamobile.co.kr/,P3,planned,도메인 및 공식 사업자명 확인 필요
+smtmobile,SMT모바일,SMT모바일,https://www.smtmobile.co.kr/,P3,planned,도메인 및 공식 사업자명 확인 필요
+spitzmobile,스피츠모바일,스피츠모바일,https://www.spitzmobile.co.kr/,P3,planned,도메인 및 공식 사업자명 확인 필요
+erelmobile,에르엘,에르엘모바일,https://www.urmobile.co.kr/,P3,planned,도메인 및 공식 사업자명 확인 필요
